@@ -354,7 +354,9 @@ function renderOrders() {
       <td>${statusSelect(ORDER_STATUSES, o.status,
         `data-order-status="${esc(o.orderRef)}" aria-label="Status for ${esc(o.orderRef)}"`)}</td>
     </tr>
-  `).join('') : emptyRow(8, 'No orders match.');
+  `).join('') : emptyRow(8, q
+    ? `No orders match "${$('#searchOrders').value.trim()}".`
+    : 'No orders yet. They appear here as soon as a customer checks out.');
 }
 
 function renderInquiries() {

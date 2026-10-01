@@ -1,29 +1,33 @@
 # Render.com blueprint - deploy with one click.
 #
 #   1. Push this repository to GitHub
-#   2. Go to https://render.com and create a New > Blueprint
-#   3. Point it at your repository
+#   2. Go to https://render.com and sign up
+#   3. New  ->  Blueprint  ->  pick this repository
 #   4. Render reads this file, creates the database and the web service,
 #      and wires them together
+#   5. Before the first deploy it asks you to fill in ADMIN_SEED_EMAIL and
+#      ADMIN_SEED_PASSWORD. Fill both in, or the site comes up with no
+#      services and no way to sign in.
 #
-# The MySQL instance it creates is FREE, but free databases on Render are
-# deleted after 30 days. For a permanent deployment use a paid database or a
-# different host - see DEPLOYMENT.md.
+# IMPORTANT about the free tier:
+#   - the MySQL instance is free but is DELETED after 30 days
+#   - the web service sleeps after 15 minutes of no visitors, so the first
+#     request after a quiet spell takes a few seconds
+# For something permanent you need the paid database.
 #
-# You will be asked to set these in the Render dashboard before the first deploy:
-#
-#   ADMIN_SEED_EMAIL      your own admin email address
-#   ADMIN_SEED_PASSWORD   a strong password you choose
-#   JWT_SECRET            a long random string (see DEPLOYMENT.md for the command)
+# The start command creates the tables and loads the services before the
+# server begins, because a fresh Render database has no tables in it.
 
 services:
   - type: web
     name: trishool-website
     runtime: node
     plan: free
-    region: singapore
     buildCommand: npm ci --omit=dev
-    startCommand: npm start
+    # Create the tables, load the services and the admin account, then serve.
+    # db:setup and db:seed are both safe to re-run, so this is also the
+    # self-heal if the database is ever replaced.
+    startCommand: npm run db:setup && npm run db:seed && npm start
     healthCheckPath: /api/health
     envVars:
       - key: NODE_ENV
@@ -54,16 +58,22 @@ services:
         generateValue: true
       - key: AUTH_COOKIE_SECURE
         value: "true"
+      # Required. Render will prompt for these before deploying.
       - key: ADMIN_SEED_EMAIL
         sync: false
       - key: ADMIN_SEED_PASSWORD
         sync: false
-      - key: PUBLIC_ORIGIN
-        sync: false
+      - key: ADMIN_SEED_NAME
+        value: Trishool Admin
+      - key: BUSINESS_WHATSAPP
+        value: "919082278478"
+      - key: BUSINESS_UPI_ID
+        value: "9324534405@ptaxis"
+      - key: GST_RATE
+        value: "18"
 
 databases:
   - name: trishool-db
     databaseName: trishool_db
     user: trishool
     plan: free
-    region: singapore

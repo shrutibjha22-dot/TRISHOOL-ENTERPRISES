@@ -53,8 +53,38 @@ const BUSINESS = {
    requires a signed-in admin session, which lives in an httpOnly cookie
    the browser sends automatically and no script here can read.
    --------------------------------------------------------- */
+/* ---------------------------------------------------------
+   WHERE THE BACKEND LIVES
+
+   There are three ways this site can be run, and the two settings
+   below are what let one build work in all of them.
+
+   1. Everything on one machine (START-WEBSITE.bat, or a Render
+      deployment). The page and the API share an origin, so both
+      settings stay blank. This is the default.
+
+   2. Static page on GitHub Pages, API on a real host
+      (Render, Railway, a VPS). Put that host in BOTH settings,
+      for example:
+
+          apiBase:  'https://trishool-website.onrender.com',
+          adminUrl: 'https://trishool-website.onrender.com/admin.html'
+
+      Forms then save to the database and the admin dashboard works
+      from anywhere in the world.
+
+   3. Static page on GitHub Pages with no API deployed yet.
+      Leave apiBase blank and set adminUrl to wherever you do run the
+      server - by default your own machine. Clicking Admin then takes
+      the browser to the working dashboard instead of showing an error
+      page that cannot do anything.
+   --------------------------------------------------------- */
 const BACKEND = {
-  apiBase: ''
+  // '' means "the same host that served this page".
+  apiBase: '',
+
+  // Where the admin dashboard lives when it cannot run on this page.
+  adminUrl: 'http://127.0.0.1:3000/admin.html'
 };
 
 /** Build an API URL. */
@@ -62,6 +92,24 @@ const api = (path) => BACKEND.apiBase + '/api' + path;
 
 /** The backend is considered up once the page is served by it. */
 const backendOn = () => true;
+
+/**
+ * Is the API actually answering?
+ *
+ * Checked once and remembered. A static host such as GitHub Pages serves the
+ * page fine but has no /api at all, and that is the one situation where the
+ * admin panel genuinely cannot work on this page.
+ */
+let apiCheck = null;
+function apiAvailable() {
+  if (apiCheck === null) {
+    apiCheck = fetch(api('/health'), { cache: 'no-store' })
+      .then((r) => r.json())
+      .then((d) => !!(d && d.ok))
+      .catch(() => false);
+  }
+  return apiCheck;
+}
 
 /* ---------------------------------------------------------
    CATALOG
@@ -1426,9 +1474,12 @@ const SERVER_URL = 'http://127.0.0.1:3000';
 const openedAsFile = () => location.protocol === 'file:';
 
 async function openAdmin() {
-  // Opened from disk: send the browser to the real server, where Admin works.
-  if (openedAsFile()) {
-    location.href = `${SERVER_URL}/admin.html`;
+  // Opened from disk, or served from a static host with no API behind it.
+  // Either way there is nothing for the in-page panel to talk to, so the
+  // browser goes to where the dashboard actually runs instead of showing a
+  // sign-in form that can never succeed.
+  if (openedAsFile() || !(await apiAvailable())) {
+    location.href = BACKEND.adminUrl || `${SERVER_URL}/admin.html`;
     return;
   }
 

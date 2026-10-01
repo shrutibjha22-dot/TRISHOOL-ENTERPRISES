@@ -20,10 +20,43 @@
 
 (() => {
 
-/* Keep the API address in step with BACKEND in app.js. */
-const BACKEND = { apiBase: '' };
+/**
+ * Keep in step with BACKEND in app.js - see the long comment there for the
+ * three ways this site can be run.
+ *
+ * adminUrl is where the dashboard lives when this page cannot host it, which
+ * is what happens on a static host such as GitHub Pages.
+ */
+const BACKEND = {
+  apiBase: '',
+  adminUrl: 'http://127.0.0.1:3000/admin.html'
+};
 
 const api = (path) => BACKEND.apiBase + '/api' + path;
+
+/**
+ * Send the browser to the real dashboard if this page cannot reach an API.
+ *
+ * On GitHub Pages the page loads but /api is a 404, so the sign-in form would
+ * sit there failing. Redirecting is honest: the dashboard either opens where
+ * it actually runs, or the browser reports the host is unreachable.
+ *
+ * The href check prevents a redirect loop if adminUrl ever points back here.
+ */
+async function redirectIfNoApi() {
+  if (location.protocol === 'file:') return;
+
+  let ok = false;
+  try {
+    const res = await fetch(api('/health'), { cache: 'no-store' });
+    ok = !!(res.ok && res.status === 200);
+  } catch { ok = false; }
+
+  if (ok || !BACKEND.adminUrl) return;
+  if (location.href === BACKEND.adminUrl) return;
+
+  location.replace(BACKEND.adminUrl);
+}
 
 const ORDER_STATUSES   = ['New', 'Confirmed', 'In Progress', 'Completed', 'Cancelled'];
 const INQUIRY_STATUSES = ['New', 'Contacted', 'Quoted', 'Booked', 'Closed'];
@@ -693,16 +726,20 @@ function initAdmin() {
   }
 
   /* --- standalone page: check for an existing session straight away --- */
-  req('GET', '/auth/me')
-    .then(async (data) => {
-      state.admin = data.admin;
-      $('#adminName').textContent = data.admin.name;
-      $('#adminEmail').textContent = data.admin.email;
-      $('#gate').hidden = true;
-      $('#app').hidden = false;
-      await refresh();
-    })
-    .catch(() => showGate());
+  // If this host has no API at all, go where the dashboard really lives
+  // rather than showing a sign-in form that can never work here.
+  redirectIfNoApi().then(() => {
+    req('GET', '/auth/me')
+      .then(async (data) => {
+        state.admin = data.admin;
+        $('#adminName').textContent = data.admin.name;
+        $('#adminEmail').textContent = data.admin.email;
+        $('#gate').hidden = true;
+        $('#app').hidden = false;
+        await refresh();
+      })
+      .catch(() => showGate());
+  });
 }
 
 if (document.readyState === 'loading') {

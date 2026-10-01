@@ -1,0 +1,14 @@
+{
+  "appId": "in.trishool.enterprises",
+  "appName": "Trishool Enterprises",
+  "webDir": "www",
+  "bundledWebRuntime": false,
+  "android": {
+    "allowMixedContent": false,
+    "captureInput": true,
+    "webContentsDebuggingEnabled": false
+  },
+  "server": {
+    "androidScheme": "https"
+  }
+}

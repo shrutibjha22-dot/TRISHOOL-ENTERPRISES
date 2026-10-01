@@ -1,0 +1,44 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Node (only needed if you build the Android wrapper)
+node_modules/
+www/
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+android/capacitor-cordova-android-plugins/
+.gradle/
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+# Personal VS Code settings stay out, but the run configuration is generic (it
+# only starts the server) and is worth sharing - without it, pressing F5 gives
+# "Code language not supported or defined".
+#
+# Note: this must ignore the folder's *contents*, not the folder itself. Git
+# cannot re-include a file whose parent directory is excluded, so `.vscode/` plus
+# `!.vscode/launch.json` would silently do nothing.
+.vscode/*
+!.vscode/launch.json
+.idea/
+
+# Anything that could hold real customer data or credentials.
+*.csv
+orders*.xlsx
+*customer*.xlsx
+secrets.local.js
+
+# Real configuration is never committed. `.env.example` is the shared template
+# and must stay tracked, so it is re-included after the rules above.
+.env
+.env.*
+!.env.example

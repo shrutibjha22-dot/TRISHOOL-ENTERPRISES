@@ -1,0 +1,125 @@
+============================================================
+  TRISHOOL ENTERPRISES - READ THIS FIRST
+============================================================
+
+  FOLDER:  trishool-website
+
+  This is your project. Upload the CONTENTS of this folder to
+  GitHub, not the folder itself.
+
+
+------------------------------------------------------------
+  STEP 1 - FIRST TIME ONLY, ON THIS COMPUTER
+------------------------------------------------------------
+
+  1. Double-click  START-WEBSITE.bat
+
+     It will:
+       - install the packages (takes about a minute)
+       - ask you to fill in 3 lines in a file that opens
+       - create the database
+       - open the website
+
+  2. In the file that opens, fill in these three lines:
+
+       DB_PASSWORD=          your MySQL password
+       ADMIN_SEED_EMAIL=     your own email address
+       ADMIN_SEED_PASSWORD=  a password of your choice
+
+     Save it and close it. The window continues by itself.
+
+  3. When it says "Website http://127.0.0.1:3000/", open that
+     address in your browser.
+
+
+------------------------------------------------------------
+  STEP 2 - EVERY TIME AFTER THAT
+------------------------------------------------------------
+
+  1. Double-click  START-WEBSITE.bat
+  2. Open  http://127.0.0.1:3000/
+
+  Keep the black window open while you browse. Closing it stops
+  the website.
+
+
+------------------------------------------------------------
+  IMPORTANT - WHY NOT JUST DOUBLE-CLICK index.html ?
+------------------------------------------------------------
+
+  Opening index.html by double-clicking shows the design and the
+  WhatsApp buttons, but the FORMS will not save anything, because
+  there is no server and no database behind it. A yellow banner
+  now appears at the top of the page saying exactly this.
+
+  So: always go through  START-WEBSITE.bat  and use the
+  http://127.0.0.1:3000/ address.
+
+
+------------------------------------------------------------
+  THE ADMIN DASHBOARD
+------------------------------------------------------------
+
+  Click  Admin  in the navigation bar (or in the footer).
+
+  Email:    the ADMIN_SEED_EMAIL you set in step 1
+  Password: the ADMIN_SEED_PASSWORD you set in step 1
+
+  From the dashboard you can change prices, add services,
+  approve reviews, and read orders, bookings and messages.
+
+  Changing a price updates the public website immediately.
+
+
+------------------------------------------------------------
+  ON YOUR PHONE (same Wi-Fi only)
+------------------------------------------------------------
+
+  1. Right-click  ALLOW-PHONE-ACCESS.bat  ->  Run as administrator
+  2. It prints an address like  http://192.168.0.105:3000/
+  3. Open that address on the phone
+
+  Only works while the computer is on and the server is running.
+
+
+------------------------------------------------------------
+  PUTTING IT ON GITHUB
+------------------------------------------------------------
+
+  The folder is already a git repository, ready for its first
+  commit. Open a terminal in this folder and run:
+
+      git config user.name  "Your Name"
+      git config user.email "you@yourdomain.com"
+      git commit -m "Trishool Enterprises website with backend"
+      git remote add origin https://github.com/YOU/trishool-website.git
+      git push -u origin main
+
+  Or upload the files by hand: create an empty repository on
+  github.com, then drag everything from this folder into the
+  "uploading an existing file" box on the repository page.
+
+  The .env file is NOT in this folder on purpose - it holds real
+  passwords and must never be uploaded. Other people create
+  their own from  .env.example.
+
+
+------------------------------------------------------------
+  IF SOMETHING GOES WRONG
+------------------------------------------------------------
+
+  "Cannot find module 'express'"
+      -> node_modules is missing. Double-click START-WEBSITE.bat.
+
+  "could not connect to the database"
+      -> MySQL is not running, or DB_PASSWORD in .env is wrong.
+
+  Website says "can't be reached"
+      -> The server is not running. Double-click START-WEBSITE.bat.
+         Check nothing else is using port 3000.
+
+  Forms do nothing, design looks fine
+      -> You opened index.html directly. Use the localhost address
+         instead. See the yellow banner at the top of the page.
+
+============================================================

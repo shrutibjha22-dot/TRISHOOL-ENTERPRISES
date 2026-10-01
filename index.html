@@ -1,0 +1,1346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TRISHOOL ENTERPRISES — Computer &amp; Printer Repair, AMC, Buy &amp; Sell</title>
+<meta name="description" content="TRISHOOL ENTERPRISES — IT Infrastructure &amp; Printing Solutions. Computer &amp; printer repair, cartridge refill, AMC plans and buying/selling of computers &amp; printers. Transparent pricing, cash &amp; UPI accepted." />
+<meta name="theme-color" content="#0B2A5B" />
+
+<link rel="icon" href="assets/icon.png" type="image/png" sizes="any" />
+<link rel="apple-touch-icon" href="icons/icon-192.png" />
+
+<!-- Installable app (PWA): works from the home screen, no app store needed -->
+<link rel="manifest" href="manifest.webmanifest" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Trishool" />
+<meta name="application-name" content="Trishool" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+<!-- Admin dashboard styling, shared with admin.html. -->
+<link rel="stylesheet" href="admin.css" />
+
+<!-- Logo: assets/logo-mark.png is the shield, extracted from your original
+     artwork by tools/make_logo_assets.py (background removed, transparent).
+     assets/logo.png is the full lockup. See README.md, "Logo". -->
+</head>
+<body>
+
+<!-- ============================ HEADER ============================ -->
+<header class="site-header" id="siteHeader">
+  <div class="container header-inner">
+
+    <a href="#home" class="brand">
+      <img src="assets/logo-mark.png" alt="Trishool Enterprises logo" class="brand-logo" width="48" height="47" />
+      <span class="brand-text">
+        <strong>TRISHOOL</strong>
+        <em>ENTERPRISES</em>
+        <small>IT Infrastructure &amp; Printing Solutions</small>
+      </span>
+    </a>
+
+    <nav class="nav" id="primaryNav" aria-label="Primary">
+      <a href="#services">Services</a>
+      <a href="#amc">AMC</a>
+      <a href="#buy">Buy &amp; Sell</a>
+      <a href="#why">Why Us</a>
+      <a href="#journey">Journey</a>
+      <a href="#inquire">Book</a>
+      <a href="#faq">FAQ</a>
+      <a href="#contact">Contact</a>
+      <!-- Staff entry point. Always visible: it opens the sign-in form, which
+           is the only way to reach the dashboard, so there is nothing to hide.
+           See showAdminNav() in app.js and openAdmin(). -->
+      <a href="admin.html" id="navAdmin" class="nav-admin" rel="nofollow">Admin</a>
+    </nav>
+
+    <div class="header-actions">
+      <a class="btn btn-ghost hide-sm" data-wa href="#contact" target="_blank" rel="noopener">WhatsApp</a>
+      <button class="cart-btn" id="cartBtn" aria-label="Open cart" aria-haspopup="dialog">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.55L21 8H7M10 21a1 1 0 1 0 0-2 1 1 0 0 0 0 2Zm8 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"/></svg>
+        <span class="cart-count" id="cartCount" data-empty="true" aria-hidden="true">0</span>
+      </button>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+
+  </div>
+</header>
+
+<main class="site-main">
+
+<!-- ============================ HERO ============================ -->
+<section class="hero" id="home">
+  <div class="hero-bg" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="container hero-inner">
+
+    <div class="hero-copy">
+      <span class="pill">
+        <span class="dot"></span> Trusted IT &amp; Printing Solutions
+      </span>
+
+      <h1>
+        Your <span class="grad">Computer &amp; Printer</span><br />
+        Backed By Real Experts.
+      </h1>
+
+      <p class="lead">
+        Repair, AMC and buy/sell for computers, printers and IT gear — with
+        upfront pricing, honest advice and fast turnaround. No surprises on the bill.
+      </p>
+
+      <p class="hero-since">
+        <span class="hero-since-dot"></span>
+        Kalamboli, Navi Mumbai &middot; serving customers since
+        <strong data-count="1997" data-from="1994">1997</strong>
+      </p>
+
+      <div class="hero-cta">
+        <a class="btn btn-primary btn-lg" data-wa href="#contact" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" class="ico" aria-hidden="true"><path d="M20.5 3.5A11.9 11.9 0 0 0 3.2 18.9L2 22l3.2-1.1A11.9 11.9 0 0 0 20.5 3.5Zm-8.4 18.2c-1.6 0-3.1-.4-4.4-1.2l-.3-.2-3 .8.8-2.9-.2-.3a9.9 9.9 0 1 1 7.1 3.8Zm5.4-7.4c-.3-.1-1.7-.8-2-1s-.5-.1-.7.2-.7 1-.9 1.2-.4.2-.7 0a8.1 8.1 0 0 1-2.4-1.5 9 9 0 0 1-1.6-2c-.2-.3 0-.5.1-.6l.5-.6.3-.5v-.5l-1-2.3c-.2-.6-.5-.5-.7-.5h-.6a1.2 1.2 0 0 0-.8.4 3.4 3.4 0 0 0-1.1 2.6 5.9 5.9 0 0 0 1.2 3.1 13.5 13.5 0 0 0 5.1 4.5c2.2.9 2.5.7 2.9.7a3 3 0 0 0 2-1.4 2.5 2.5 0 0 0 .2-1.4c-.1-.2-.3-.2-.6-.4Z"/></svg>
+          Chat on WhatsApp
+        </a>
+        <a href="#services" class="btn btn-outline btn-lg">See Prices</a>
+      </div>
+
+      <ul class="hero-chips">
+        <li>Transparent pricing</li>
+        <li>Same-day service</li>
+        <li>Cash &amp; UPI</li>
+      </ul>
+    </div>
+
+    <div class="hero-card">
+      <div class="hero-card-head">
+        <h2>Quick Service Rates</h2>
+        <span class="tag">Popular</span>
+      </div>
+      <ul class="rate-list" id="heroRates"></ul>
+      <a href="#services" class="btn btn-primary btn-block">View all services</a>
+      <p class="tiny">Final price confirmed after diagnosis. No hidden charges.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============================ TICKER ============================ -->
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track">
+    <div class="ticker-group">
+      <span>Since 1997</span><b></b><span>Dot Matrix Repair</span><b></b>
+      <span>Laser Toners</span><b></b><span>Ink Tank Printers</span><b></b>
+      <span>Printer Head Refurbishing</span><b></b><span>Computer AMC</span><b></b>
+      <span>Printer AMC</span><b></b><span>Same-Day Service</span><b></b>
+    </div>
+    <div class="ticker-group">
+      <span>Since 1997</span><b></b><span>Dot Matrix Repair</span><b></b>
+      <span>Laser Toners</span><b></b><span>Ink Tank Printers</span><b></b>
+      <span>Printer Head Refurbishing</span><b></b><span>Computer AMC</span><b></b>
+      <span>Printer AMC</span><b></b><span>Same-Day Service</span><b></b>
+    </div>
+  </div>
+</div>
+
+<!-- ============================ TRUST STATS ============================ -->
+<section class="trust-strip">
+  <div class="container trust-grid">
+    <div class="trust-item">
+      <strong data-count="1997" data-from="1991">1997</strong>
+      <span>Serving since</span>
+    </div>
+    <div class="trust-item">
+      <strong><span data-count="3">3</span> Decades</strong>
+      <span>Under one leadership</span>
+    </div>
+    <div class="trust-item">
+      <strong>Same Day</strong>
+      <span>Service turnaround</span>
+    </div>
+    <div class="trust-item">
+      <strong>Cash / UPI</strong>
+      <span>Easy payment</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ SERVICES ============================ -->
+<section class="section" id="services">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">What we do</span>
+      <h2>Services With Upfront Pricing</h2>
+      <p>Every price below is what you pay. Add what you need to the cart, then confirm on WhatsApp.</p>
+    </div>
+    <div class="grid grid-4" id="servicesGrid"></div>
+  </div>
+</section>
+
+<!-- ============================ AMC ============================ -->
+<section class="section section-alt" id="amc">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Annual Maintenance</span>
+      <h2>AMC Plans That Keep You Working</h2>
+      <p>Annual Maintenance Contracts with priority response and genuine parts. Comprehensive cover available on request.</p>
+    </div>
+    <div class="grid grid-2" id="amcGrid"></div>
+
+    <div class="amc-note">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm1 15h-2v-2h2v2Zm0-4h-2V7h2v6Z"/></svg>
+      <p><strong>Note:</strong> the prices above are <strong>non-comprehensive AMC</strong> — labour and standard service visits are covered, parts and consumables are charged separately at cost. Ask us for a comprehensive quote.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ BUY & SELL ============================ -->
+<section class="section" id="buy">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Buy &amp; Sell</span>
+      <h2>Buying or Selling IT Equipment?</h2>
+      <p>New and refurbished computers, printers and consumables. Fair valuation, honest condition grading.</p>
+    </div>
+    <div class="grid grid-4" id="buyGrid"></div>
+  </div>
+</section>
+
+<!-- ============================ HOW IT WORKS ============================ -->
+<section class="section section-alt" id="how">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Simple process</span>
+      <h2>Get It Done in 4 Easy Steps</h2>
+    </div>
+    <ol class="steps">
+      <li>
+        <span class="step-num">1</span>
+        <h3>Pick your service</h3>
+        <p>Add services or AMC plans to the cart and send the order to us on WhatsApp.</p>
+      </li>
+      <li>
+        <span class="step-num">2</span>
+        <h3>We confirm &amp; schedule</h3>
+        <p>You get a confirmation with the final amount and an arrival time.</p>
+      </li>
+      <li>
+        <span class="step-num">3</span>
+        <h3>Pay Cash or UPI</h3>
+        <p>Scan the UPI QR or pay cash after the job. Receipt issued on request.</p>
+      </li>
+      <li>
+        <span class="step-num">4</span>
+        <h3>Service &amp; support</h3>
+        <p>We repair, test and hand back. AMC customers get ongoing priority support.</p>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- ============================ WHY US ============================ -->
+<section class="section" id="why">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Why Trishool</span>
+      <h2>Reasons Customers Keep Coming Back</h2>
+    </div>
+    <div class="grid grid-3">
+      <article class="feature">
+        <span class="feature-ico">&#8377;</span>
+        <h3>Fixed, Published Prices</h3>
+        <p>The rate you see is the rate you pay. We quote before we start, and we don't add surprise labour charges later.</p>
+      </article>
+      <article class="feature">
+        <span class="feature-ico">&#9881;</span>
+        <h3>Same-Day Turnaround</h3>
+        <p>Most printer and computer repairs are completed the same day, so your work stops waiting.</p>
+      </article>
+      <article class="feature">
+        <span class="feature-ico">&#10003;</span>
+        <h3>Genuine Spare Parts</h3>
+        <p>We use original or OEM-grade parts and share the part details with you before fitting.</p>
+      </article>
+      <article class="feature">
+        <span class="feature-ico">&#128188;</span>
+        <h3>On-Site Service</h3>
+        <p>Office or home visit available. For AMC customers, priority slots and remote help where possible.</p>
+      </article>
+      <article class="feature">
+        <span class="feature-ico">&#128176;</span>
+        <h3>Fair Buy / Sell Deals</h3>
+        <p>Honest grading and fair valuation for your old hardware, whether you're buying or selling.</p>
+      </article>
+      <article class="feature">
+        <span class="feature-ico">&#128274;</span>
+        <h3>Flexible AMC</h3>
+        <p>Annual AMC with responsive support — and switch to comprehensive cover whenever you need parts included.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ JOURNEY ============================ -->
+<!-- ============================ JOURNEY ============================ -->
+<section class="section journey" id="journey" data-lang="en">
+  <div class="container">
+
+    <div class="lang-toggle" role="group" aria-label="Choose language / भाषा चुनें">
+      <button type="button" class="lang-btn is-active" data-setlang="en" aria-pressed="true">English</button>
+      <button type="button" class="lang-btn" data-setlang="hi" aria-pressed="false" lang="hi">हिंदी</button>
+    </div>
+
+    <!-- ================= ENGLISH ================= -->
+    <div class="lang-panel" data-lang="en">
+      <div class="section-head">
+        <span class="eyebrow">Our Journey</span>
+        <h2>From a &#8377;25 Ribbon to a<br /><em>Three-Decade Legacy</em></h2>
+        <p class="journey-lede">
+          Every great enterprise begins with a bold choice. This is the story of
+          <strong>Bibekanand Jha</strong> — and the promise he has kept alive
+          since 1997.
+        </p>
+      </div>
+
+      <div class="origin">
+        <div class="origin-block">
+          <span class="origin-tag">The First Choice</span>
+          <h3>He Left College for the Real World</h3>
+          <p>
+            In his first year studying EXTC engineering at the prestigious
+            <strong>Shah &amp; Anchor College</strong>, Bibekanand Jha realised
+            where his real gift lay. It wasn't in textbooks and classrooms — it
+            was in the practical, real-world execution of things that actually
+            get built. So he made the courageous decision to leave college and
+            step directly into the workforce.
+          </p>
+          <p>
+            Over the next few years he took on a spread of diverse jobs, learning
+            the business from the ground up. His pivotal stint came in the
+            <strong>intense banking sector</strong> — an environment that
+            sharpened his technical expertise and instilled a sharp discipline
+            for heavy-duty corporate operations. Armed with hard-won knowledge
+            and a burning desire to build something of his own, he set out to
+            launch his company.
+          </p>
+        </div>
+
+        <aside class="origin-note">
+          <h4>Why "Trishool"?</h4>
+          <p>
+            In <strong>1996</strong> the business was originally given the
+            official name <em>Transcore Laminaters</em>. He never worked on it.
+            Then a profound personal loss changed his path and timeline forever.
+          </p>
+          <p>
+            A dear, close friend — a passionate devotee of
+            <strong>Lord Mahadev</strong> — always affectionately called
+            Bibekanand <em>"Kaptan Sahab"</em> (Captain). And he had one standing
+            instruction, given with love: whenever you build your own working
+            empire, name it after the sacred symbol of Shiva.
+          </p>
+          <blockquote class="kaptan-quote">
+            &ldquo;Kaptan Sahab, keep your company name as
+            <strong>Trishool Enterprises</strong>.&rdquo;
+          </blockquote>
+          <p>
+            Tragically, that close friend passed away soon after, to a health
+            disorder. To honour his final wish, cherish his memory and carry his
+            love forward, the old name was dropped entirely — and
+            <strong>Trishool Enterprises</strong> was born.
+          </p>
+        </aside>
+      </div>
+
+      <ol class="timeline">
+        <li class="tl-item" data-reveal>
+          <span class="tl-year">1996</span>
+          <div class="tl-body">
+            <h4>The Name That Wasn't</h4>
+            <p>
+              The company is officially registered as <em>Transcore Laminaters</em>
+              — but a different path is already calling.
+            </p>
+          </div>
+        </li>
+
+        <li class="tl-item featured" data-reveal>
+          <span class="tl-year">1997</span>
+          <div class="tl-body">
+            <h4>Trishool Enterprises Launches</h4>
+            <p>
+              After his valuable experience in the banking sector, Bibekanand
+              officially launches his true working empire under the name
+              <strong>Trishool Enterprises</strong> — the name his friend
+              believed in.
+            </p>
+            <p>
+              He started with the basics: manually repairing
+              <strong>Dot Matrix printers</strong> and refilling printer ribbons
+              for just <strong>&#8377;25 a piece</strong>. In those early days his
+              monthly income was a modest <strong>&#8377;3,000</strong>.
+            </p>
+          </div>
+        </li>
+
+        <li class="tl-item" data-reveal>
+          <span class="tl-year">Growth</span>
+          <div class="tl-body">
+            <h4>&#8377;3,000 &rarr; &#8377;50,000 a Month</h4>
+            <p>
+              Driven by flawless execution and absolute reliability, that graph
+              scaled rapidly — from a modest &#8377;3,000 a month to an
+              outstanding <strong>&#8377;50,000 a month</strong>.
+            </p>
+          </div>
+        </li>
+
+        <li class="tl-item" data-reveal>
+          <span class="tl-year">2007</span>
+          <div class="tl-body">
+            <h4>The Major Corporate Leap</h4>
+            <p>
+              Trishool sets up a permanent base at the
+              <strong>Steel Chamber</strong>. Under Bibekanand's steady
+              leadership the enterprise scales aggressively — pioneering corporate
+              <strong>Computer and Printer AMCs</strong> and mastering
+              specialised <strong>printer head refurbishing</strong>.
+            </p>
+          </div>
+        </li>
+
+        <li class="tl-item" data-reveal>
+          <span class="tl-year">Today</span>
+          <div class="tl-body">
+            <h4>Three Decades, and Still Precision Work</h4>
+            <p>
+              From the legacy days of Dot Matrix ribbons to modern
+              <strong>Laser toners</strong> and cutting-edge
+              <strong>Ink Tank technology</strong>, Bibekanand Jha has steered
+              Trishool for three decades with the absolute precision, fairness
+              and vision of a true Kaptan.
+            </p>
+          </div>
+        </li>
+      </ol>
+
+      <div class="legacy-stats" data-reveal>
+        <div class="lstat">
+          <strong>1997</strong>
+          <span>Trishool Enterprises founded</span>
+        </div>
+        <div class="lstat">
+          <strong>3 Decades</strong>
+          <span>Under one leadership</span>
+        </div>
+        <div class="lstat">
+          <strong>&#8377;3K &rarr; &#8377;50K</strong>
+          <span>First-year income to monthly</span>
+        </div>
+        <div class="lstat">
+          <strong>Dot Matrix &rarr; Ink Tank</strong>
+          <span>The technology journey</span>
+        </div>
+      </div>
+
+      <div class="founder" data-reveal>
+        <div class="founder-mark" aria-hidden="true">BJ</div>
+        <div class="founder-text">
+          <h3>Bibekanand Jha</h3>
+          <p class="founder-role">Founder &amp; Managing Partner, Trishool Enterprises</p>
+          <p class="founder-quote">
+            Precision, fairness and honesty — every job, whether it is a
+            &#8377;25 ribbon refill or a full corporate AMC.
+          </p>
+          <p class="founder-sig" aria-label="Signed, Bibekanand Jha">Bibekanand Jha</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= हिंदी ================= -->
+    <div class="lang-panel" data-lang="hi" lang="hi" hidden>
+      <div class="section-head">
+        <span class="eyebrow">हमारी यात्रा</span>
+        <h2>&#8377;25 की रिबन से<br /><em>3 दशकों की विरासत</em></h2>
+        <p class="journey-lede">
+          Trishool के पीछे के असली Brain — <strong>Bibekanand Jha</strong> की कहानी,
+          और वो वादा जो वे 1997 से आज तक निभा रहे हैं।
+        </p>
+      </div>
+
+      <div class="origin">
+        <div class="origin-block">
+          <span class="origin-tag">पहला फैसला</span>
+          <h3>किताबों से नहीं, असली दुनिया से</h3>
+          <p>
+            जब बिबेकानंद जी फेमस <strong>Shah &amp; Anchor College</strong> से
+            EXTC इंजीनियरिंग कर रहे थे, तब उन्हें रियलाइज़ हुआ कि उनका असली
+            इंटरेस्ट किताबी पढ़ाई से ज़्यादा प्रैक्टिकल दुनिया में काम करने में है।
+          </p>
+          <p>
+            बस फिर क्या था, उन्होंने कॉलेज के फर्स्ट ईयर में ही एक बड़ा रिस्क लिया,
+            कॉलेज छोड़ दिया और सीधे जॉब मार्केट में उतर गए। अगले कुछ सालों तक उन्होंने
+            ज़मीनी स्तर से बिज़नेस को समझने के लिए कुछ अलग-अलग जॉब्स किए।
+          </p>
+          <p>
+            उनके करियर का सबसे बड़ा टर्निंग पॉइंट तब आया जब उन्होंने
+            <strong>banking sector</strong> में काम किया। इस जॉब ने उनकी टेक्निकल
+            नॉलेज को बहुत सॉलिड बनाया और सिखाया कि बड़े कॉर्पोरेट ऑपरेशन्स को कैसे
+            मैनेज किया जाता है। इसी एक्सपीरियंस और खुद का कुछ बड़ा स्टार्ट करने के
+            सपने के साथ उन्होंने अपना सफर शुरू किया।
+          </p>
+        </div>
+
+        <aside class="origin-note">
+          <h4>"Trishool" नाम क्यों?</h4>
+          <p>
+            साल <strong>1996</strong> में इस बिज़नेस का नाम 'Transcore Laminaters'
+            रखा जा चुका था। लेकिन उन्होंने इस पर आगे कोई काम नहीं किया और न ही इसे
+            आगे बढ़ाया। इसके बजाय, एक पर्सनल लॉस ने कंपनी की दिशा और तकदीर हमेशा के
+            लिए बदल दी।
+          </p>
+          <p>
+            बिबेकानंद जी के एक बेहद क्लोज़ फ्रेंड थे, जो भगवान महादेव के बहुत बड़े भक्त
+            थे। वो बिबेकानंद जी को प्यार से <em>"Kaptan Sahab"</em> (Captain) कहकर
+            बुलाते थे। उन्होंने हमेशा बिबेकानंद जी से कहा था कि वो जब भी अपना खुद का
+            वर्किंग एम्पायर खड़ा करें, उसका नाम महादेव के पवित्र प्रतीक पर ही रखें।
+          </p>
+          <blockquote class="kaptan-quote">
+            &ldquo;Kaptan Sahab, अपनी कंपनी का नाम
+            <strong>Trishool Enterprises</strong> ही रखना।&rdquo;
+          </blockquote>
+          <p>
+            लेकिन अचानक एक हेल्थ डिसऑर्डर की वजह से उनके उस अजीज़ दोस्त का निधन हो
+            गया। अपने दोस्त की इसी आखिरी इच्छा का मान रखने के लिए, उनकी यादों और
+            प्यार को हमेशा ज़िंदा रखने के लिए, बिबेकानंद जी ने पुराना नाम पूरी तरह
+            से हटा दिया — और <strong>Trishool Enterprises</strong> का जन्म हुआ।
+          </p>
+        </aside>
+      </div>
+
+      <ol class="timeline">
+        <li class="tl-item" data-reveal>
+          <span class="tl-year">1996</span>
+          <div class="tl-body">
+            <h4>वो नाम जो कभी आगे नहीं बढ़ा</h4>
+            <p>
+              कंपनी का ऑफिशियल नाम <em>Transcore Laminaters</em> रखा गया — लेकिन
+              किसी और रास्ते का आह्वान पहले से ज़्यादा ज़ोर से चल रहा था।
+            </p>
+          </div>
+        </li>
+
+        <li class="tl-item featured" data-reveal>
+          <span class="tl-year">1997</span>
+          <div class="tl-body">
+            <h4>Trishool Enterprises की शुरुआत</h4>
+            <p>
+              बैंकिंग सेक्टर के अपने बेहतरीन एक्सपीरियंस के बाद, बिबेकानंद जी ने
+              ऑफिशियली अपने असली वर्किंग एम्पायर की शुरुआत की, जिसका नाम रखा गया —
+              <strong>Trishool Enterprises</strong> — वही नाम जिस पर उनके दोस्त का
+              यकीन था।
+            </p>
+            <p>
+              शुरुआत बहुत ही बेसिक लेवल से हुई थी — मैन्युअली
+              <strong>Dot Matrix printers</strong> को रिपेयर करना और सिर्फ
+              <strong>&#8377;25</strong> में प्रिंटर रिबन रिफिल करना। 1997 के उन
+              शुरुआती दिनों में उनकी मंथली इनकम सिर्फ <strong>&#8377;3,000</strong>
+              थी।
+            </p>
+          </div>
+        </li>
+
+        <li class="tl-item" data-reveal>
+          <span class="tl-year">Growth</span>
+          <div class="tl-body">
+            <h4>&#8377;3,000 &rarr; &#8377;50,000 महीना</h4>
+            <p>
+              उनकी ज़बरदस्त मेहनत और बेस्ट सर्विस के दम पर, यह ग्राफ बहुत जल्दी
+              &#8377;3,000 से बढ़कर <strong>&#8377;50,000 महीना</strong> पर पहुँच
+              गया!
+            </p>
+          </div>
+        </li>
+
+        <li class="tl-item" data-reveal>
+          <span class="tl-year">2007</span>
+          <div class="tl-body">
+            <h4>बड़ा कॉर्पोरेट जंप</h4>
+            <p>
+              साल 2007 तक Trishool ने <strong>Steel Chamber</strong> में अपना
+              परमानेंट ऑफिस सेटअप किया। बिबेकानंद जी के लीडरशिप में कंपनी ने तेज़ी
+              से ग्रो किया — कॉर्पोरेट <strong>Computer और Printer AMCs</strong>
+              की शुरुआत की और प्रिंटर हेड को रीफर्बिश करने की मुश्किल आर्ट में महारत
+              हासिल की।
+            </p>
+          </div>
+        </li>
+
+        <li class="tl-item" data-reveal>
+          <span class="tl-year">आज</span>
+          <div class="tl-body">
+            <h4>3 दशक, और आज भी वही परफेक्शन</h4>
+            <p>
+              पुराने Dot Matrix रिबन के दिनों से लेकर आज की मॉडर्न
+              <strong>Laser</strong> और <strong>Ink Tank technology</strong> तक,
+              Bibekanand Jha ने पिछले लगभग 3 दशकों से Trishool Enterprises को एक
+              सच्चे <em>'कप्तान'</em> की तरह पूरी ईमानदारी, परफेक्शन और विज़न के साथ
+              आगे बढ़ाया है।
+            </p>
+          </div>
+        </li>
+      </ol>
+
+      <div class="legacy-stats" data-reveal>
+        <div class="lstat">
+          <strong>1997</strong>
+          <span>Trishool Enterprises की स्थापना</span>
+        </div>
+        <div class="lstat">
+          <strong>3 दशक</strong>
+          <span>एक ही नेतृत्व में</span>
+        </div>
+        <div class="lstat">
+          <strong>&#8377;3K &rarr; &#8377;50K</strong>
+          <span>पहले साल से मासिक आय तक</span>
+        </div>
+        <div class="lstat">
+          <strong>Dot Matrix &rarr; Ink Tank</strong>
+          <span>टेक्नोलॉजी का सफ़र</span>
+        </div>
+      </div>
+
+      <div class="founder" data-reveal>
+        <div class="founder-mark" aria-hidden="true">BJ</div>
+        <div class="founder-text">
+          <h3>Bibekanand Jha</h3>
+          <p class="founder-role">फाउंडर &amp; मैनेजिंग पार्टनर, Trishool Enterprises</p>
+          <p class="founder-quote">
+            परफेक्शन, निष्पक्षता और ईमानदारी — हर काम में, चाहे वो &#8377;25 की
+            रिबन रिफिल हो या पूरा कॉर्पोरेट AMC।
+          </p>
+          <p class="founder-sig" aria-label="Signed, Bibekanand Jha">Bibekanand Jha</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============================ BOOK / INQUIRE ============================ -->
+<section class="section" id="inquire">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Book or ask</span>
+      <h2>Send Us a Request</h2>
+      <p>
+        Fill this in and we will call you back. Prefer to talk now? WhatsApp us
+        and we will pick it up.
+      </p>
+    </div>
+
+    <div class="inquire-wrap">
+      <div class="inquire-tabs" role="tablist" aria-label="Request type">
+        <button class="itab is-active" id="tabBooking" role="tab" aria-selected="true" aria-controls="panelBooking" type="button">Book a service</button>
+        <button class="itab" id="tabInquiry" role="tab" aria-selected="false" aria-controls="panelInquiry" type="button">Ask a question</button>
+      </div>
+
+      <!-- ---------- booking ---------- -->
+      <form class="inquire-form" id="panelBooking" role="tabpanel" aria-labelledby="tabBooking" novalidate>
+        <div class="rf-row">
+          <label class="field">
+            <span>Your name</span>
+            <input type="text" id="bkName" autocomplete="name" placeholder="Your name" maxlength="120" required />
+          </label>
+          <label class="field">
+            <span>Mobile number</span>
+            <input type="tel" id="bkPhone" autocomplete="tel" inputmode="numeric"
+                   placeholder="10-digit mobile number" maxlength="17" required />
+          </label>
+        </div>
+
+        <div class="rf-row">
+          <label class="field">
+            <span>Service needed</span>
+            <select id="bkService"></select>
+          </label>
+          <label class="field">
+            <span>Preferred date</span>
+            <input type="date" id="bkDate" />
+          </label>
+        </div>
+
+        <label class="field">
+          <span>Address <em>(optional)</em></span>
+          <input type="text" id="bkAddress" placeholder="Where should we come?"
+                 value="Steel Chamber Tower, C Wing 527, Kalamboli, Navi Mumbai" maxlength="255" />
+        </label>
+
+        <label class="field">
+          <span>Describe the problem <em>(optional)</em></span>
+          <textarea id="bkNotes" rows="3" maxlength="2000" placeholder="Laptop will not start, printer jammed, and so on"></textarea>
+        </label>
+
+        <p class="cust-error" id="bkError" role="alert" hidden></p>
+        <p class="cust-ok" id="bkOk" role="status" hidden></p>
+
+        <div class="rf-actions">
+          <button class="btn btn-primary" type="submit" id="bkSubmit">Send request</button>
+          <a class="rf-alt" id="bkWhatsApp" href="#" target="_blank" rel="noopener" hidden>or send on WhatsApp</a>
+        </div>
+      </form>
+
+      <!-- ---------- inquiry ---------- -->
+      <form class="inquire-form" id="panelInquiry" role="tabpanel" aria-labelledby="tabInquiry" hidden novalidate>
+        <div class="rf-row">
+          <label class="field">
+            <span>Your name</span>
+            <input type="text" id="iqName" autocomplete="name" placeholder="Your name" maxlength="120" required />
+          </label>
+          <label class="field">
+            <span>Mobile number</span>
+            <input type="tel" id="iqPhone" autocomplete="tel" inputmode="numeric"
+                   placeholder="10-digit mobile number" maxlength="17" required />
+          </label>
+        </div>
+
+        <label class="field">
+          <span>What is it about?</span>
+          <select id="iqService">
+            <option value="">Not sure yet</option>
+          </select>
+        </label>
+
+        <label class="field">
+          <span>Your question</span>
+          <textarea id="iqMessage" rows="4" maxlength="2000"
+                    placeholder="Ask about pricing, parts, AMC, turn-around time..." required></textarea>
+        </label>
+
+        <p class="cust-error" id="iqError" role="alert" hidden></p>
+        <p class="cust-ok" id="iqOk" role="status" hidden></p>
+
+        <div class="rf-actions">
+          <button class="btn btn-primary" type="submit" id="iqSubmit">Send question</button>
+          <a class="rf-alt" id="iqWhatsApp" href="#" target="_blank" rel="noopener" hidden>or send on WhatsApp</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ REVIEWS ============================ -->
+<section class="section section-alt" id="reviews">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Customer feedback</span>
+      <h2>What People Say</h2>
+      <p id="reviewsNote">Real reviews from our customers, published once we approve them.</p>
+    </div>
+
+    <!-- Populated from approved reviews. Empty until real ones arrive. -->
+    <div class="grid grid-3" id="reviewsGrid"></div>
+
+    <div class="reviews-empty" id="reviewsEmpty">
+      <div class="re-star" aria-hidden="true">★★★★★</div>
+      <p>
+        We have not published any reviews yet. Every review on this page is one
+        a real customer actually wrote — we do not make them up.
+      </p>
+      <p class="tiny">Serving Kalamboli and Navi Mumbai since 1997.</p>
+    </div>
+
+    <!-- Leave a review -->
+    <div class="review-form-wrap">
+      <h3>Been our customer? Tell us how we did.</h3>
+      <p class="tiny">
+        Your review is saved the moment you send it, and appears on this page once
+        we approve it. We never publish a review that names an individual.
+      </p>
+
+      <form class="review-form" id="reviewForm" novalidate>
+        <div class="rf-row">
+          <label class="field">
+            <span>Your name</span>
+            <input type="text" id="rvName" autocomplete="name" placeholder="Your name" maxlength="80" required />
+          </label>
+
+          <label class="field">
+            <span>Service used</span>
+            <select id="rvService">
+              <option>Printer Repair</option>
+              <option>Computer Repair</option>
+              <option>Cartridge Refill</option>
+              <option>Quick Service</option>
+              <option>Computer AMC</option>
+              <option>Printer AMC</option>
+              <option>Buying a computer or printer</option>
+            </select>
+          </label>
+        </div>
+
+        <fieldset class="rf-stars">
+          <legend>Your rating</legend>
+          <div class="star-input" id="starBox" role="radiogroup" aria-label="Rating out of 5">
+            <input type="radio" name="rating" id="r5" value="5" checked />
+            <label for="r5" title="5 out of 5">★</label>
+            <input type="radio" name="rating" id="r4" value="4" />
+            <label for="r4" title="4 out of 5">★</label>
+            <input type="radio" name="rating" id="r3" value="3" />
+            <label for="r3" title="3 out of 5">★</label>
+            <input type="radio" name="rating" id="r2" value="2" />
+            <label for="r2" title="2 out of 5">★</label>
+            <input type="radio" name="rating" id="r1" value="1" />
+            <label for="r1" title="1 out of 5">★</label>
+          </div>
+        </fieldset>
+
+        <label class="field">
+          <span>Your review</span>
+          <textarea id="rvText" rows="4" maxlength="900"
+                    placeholder="What did we fix, and how did it go?" required></textarea>
+        </label>
+
+        <p class="cust-error" id="rvError" role="alert" hidden></p>
+        <p class="cust-ok" id="rvOk" role="status" hidden></p>
+
+        <div class="rf-actions">
+          <button class="btn btn-primary" type="submit" id="rvSubmit">Send review</button>
+          <a class="rf-alt" id="rvWhatsApp" href="#" target="_blank" rel="noopener" hidden>
+            or send it on WhatsApp instead
+          </a>
+        </div>
+        <p class="tiny rf-note">
+          Reviews appear on this page after we approve them.
+        </p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ FAQ ============================ -->
+<section class="section" id="faq">
+  <div class="container narrow">
+    <div class="section-head">
+      <span class="eyebrow">Questions</span>
+      <h2>Frequently Asked Questions</h2>
+    </div>
+
+    <div class="faq-list" id="faqList">
+      <details>
+        <summary>Do you repair both computers and printers?</summary>
+        <p>Yes. We handle desktop computers, laptops, printers, scanners, MFPs and cartridges across all major brands, including Canon, HP, Epson, Brother, Dell, Lenovo, Asus and Acer.</p>
+      </details>
+      <details>
+        <summary>How long does a typical repair take?</summary>
+        <p>Most printer and computer repairs finish the same day. If a part needs to be ordered, we tell you the expected time upfront and keep you updated on WhatsApp.</p>
+      </details>
+      <details>
+        <summary>What does non-comprehensive AMC mean?</summary>
+        <p>Non-comprehensive AMC covers routine servicing, fault diagnosis and labour for the covered device. Spare parts, cartridges and consumables are charged separately at cost. We also offer comprehensive AMC where parts are included — just ask for a quote.</p>
+      </details>
+      <details>
+        <summary>Do you do on-site (home / office) service?</summary>
+        <p>Yes, on-site visits are available, and for AMC customers we give priority slots. Remote assistance is possible for software and configuration issues.</p>
+      </details>
+      <details>
+        <summary>Which payment methods do you accept?</summary>
+        <p>Cash and UPI only. Scan the UPI QR on this page with any UPI app, or pay us in cash after the service is completed.</p>
+      </details>
+      <details>
+        <summary>Is GST included in the prices?</summary>
+        <p>All listed prices are exclusive of GST. GST at 18% is added automatically to every item in your cart, and the cart shows a full breakdown — subtotal, GST and final total — before you send the order. Your GST invoice is issued on request.</p>
+      </details>
+      <details>
+        <summary>Do you buy old computers and printers?</summary>
+        <p>Yes. We buy and sell new and refurbished desktops, laptops, printers, scanners and consumables. Send us the model and photos on WhatsApp for a quick valuation.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ CONTACT / PAYMENT ============================ -->
+<section class="section section-alt" id="contact">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Get in touch</span>
+      <h2>Book a Service or Ask for a Quote</h2>
+      <p>Message us on WhatsApp — the fastest way to reach us. Or walk into our Kalamboli office.</p>
+    </div>
+
+    <div class="contact-grid">
+
+      <div class="contact-card">
+        <h3>WhatsApp</h3>
+        <p class="contact-big">+91 90822 78478</p>
+        <a class="btn btn-primary btn-block" data-wa href="#contact" target="_blank" rel="noopener">Start a chat</a>
+        <ul class="contact-list">
+          <li><span>Mon – Sat</span><strong>10:00 AM – 8:00 PM</strong></li>
+          <li><span>Sunday</span><strong>By appointment</strong></li>
+          <li><span>Response time</span><strong>Usually within minutes</strong></li>
+        </ul>
+      </div>
+
+      <div class="contact-card contact-card-form">
+        <h3>Send us a message</h3>
+        <p class="tiny contact-form-lead">
+          Fill this in and we will get back to you. For anything urgent,
+          WhatsApp is faster.
+        </p>
+        <form class="contact-form" id="contactForm" novalidate>
+          <label class="field">
+            <span>Your name</span>
+            <input type="text" id="ctName" autocomplete="name" placeholder="Your name" maxlength="120" required />
+          </label>
+          <label class="field">
+            <span>Mobile number <em>(optional)</em></span>
+            <input type="tel" id="ctPhone" autocomplete="tel" inputmode="numeric"
+                   placeholder="10-digit mobile number" maxlength="17" />
+          </label>
+          <label class="field">
+            <span>Subject</span>
+            <input type="text" id="ctSubject" placeholder="What is it about?" maxlength="160" />
+          </label>
+          <label class="field">
+            <span>Message</span>
+            <textarea id="ctMessage" rows="4" maxlength="2000"
+                      placeholder="Tell us what you need" required></textarea>
+          </label>
+          <p class="cust-error" id="ctError" role="alert" hidden></p>
+          <p class="cust-ok" id="ctOk" role="status" hidden></p>
+          <button class="btn btn-primary btn-block" type="submit" id="ctSubmit">Send message</button>
+        </form>
+      </div>
+
+      <div class="contact-card payment-card">
+        <h3>Payment</h3>
+        <p class="pay-note">We accept <strong>Cash</strong> and <strong>UPI</strong> only.</p>
+
+        <div class="qr-wrap">
+          <img src="assets/upi-qr.png" alt="UPI QR code for payment to 9324534405@ptaxis" class="qr" width="180" height="180" loading="lazy" />
+        </div>
+
+        <p class="upi-id">UPI ID <strong>9324534405@ptaxis</strong></p>
+        <a class="btn btn-outline btn-block" id="payLink" href="#" rel="noopener">Open UPI app</a>
+        <p class="tiny">Scan with any UPI app (GPay, PhonePe, Paytm, BHIM).</p>
+      </div>
+
+      <div class="contact-card">
+        <h3>Visit Us</h3>
+        <address class="addr">
+          <strong>Steel Chamber Tower</strong><br />
+          C Wing, 527<br />
+          Kalamboli<br />
+          Navi Mumbai
+        </address>
+        <a class="btn btn-outline btn-block" id="mapLink" href="#" target="_blank" rel="noopener">Open in Google Maps</a>
+        <ul class="contact-list">
+          <li><span>Mon – Sat</span><strong>10:00 AM – 8:00 PM</strong></li>
+          <li><span>Sunday</span><strong>By appointment</strong></li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================ CTA BANNER ============================ -->
+<section class="cta-banner">
+  <div class="container cta-inner">
+    <div>
+      <h2>Something not working right now?</h2>
+      <p>Send us a photo and we'll tell you the fix and the price before you commit.</p>
+    </div>
+    <a class="btn btn-primary btn-lg" data-wa href="#contact" target="_blank" rel="noopener">Chat on WhatsApp</a>
+  </div>
+</section>
+
+
+</main>
+<!-- ============================ FOOTER ============================ -->
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <img src="assets/logo-mark.png" alt="Trishool Enterprises logo" class="footer-logo" width="72" height="70" loading="lazy" />
+      <p class="footer-name">TRISHOOL ENTERPRISES</p>
+      <p class="footer-tag">IT Infrastructure &amp; Printing Solutions</p>
+    </div>
+
+    <div>
+      <h3 class="foot-h">Services</h3>
+      <ul>
+        <li><a href="#services">Computer Repair</a></li>
+        <li><a href="#services">Printer Repair</a></li>
+        <li><a href="#services">Cartridge Refill</a></li>
+        <li><a href="#services">Quick Service</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h3 class="foot-h">Company</h3>
+      <ul>
+        <li><a href="#amc">AMC Plans</a></li>
+        <li><a href="#buy">Buy &amp; Sell</a></li>
+        <li><a href="#journey">Our Journey</a></li>
+        <li><a href="#why">Why Us</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h3 class="foot-h">Contact</h3>
+      <ul>
+        <li><a data-wa href="#contact" target="_blank" rel="noopener">WhatsApp: +91 90822 78478</a></li>
+        <li>Steel Chamber Tower, C Wing, 527,<br />Kalamboli, Navi Mumbai</li>
+        <li>UPI: 9324534405@ptaxis</li>
+        <li>Payment: Cash / UPI</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="container footer-bottom">
+    <p>&copy; <span id="year">2026</span> TRISHOOL ENTERPRISES. All rights reserved.</p>
+    <p>Designed for fast, honest IT service. &middot; <a class="foot-admin" href="admin.html" rel="nofollow">Admin</a></p>
+  </div>
+</footer>
+
+<!-- ============================ FLOATING WHATSAPP ============================ -->
+<a class="wa-float" data-wa href="#contact" target="_blank" rel="noopener" aria-label="Chat with us on WhatsApp">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 3.5A11.9 11.9 0 0 0 3.2 18.9L2 22l3.2-1.1A11.9 11.9 0 0 0 20.5 3.5Zm-8.4 18.2c-1.6 0-3.1-.4-4.4-1.2l-.3-.2-3 .8.8-2.9-.2-.3a9.9 9.9 0 1 1 7.1 3.8Zm5.4-7.4c-.3-.1-1.7-.8-2-1s-.5-.1-.7.2-.7 1-.9 1.2-.4.2-.7 0a8.1 8.1 0 0 1-2.4-1.5 9 9 0 0 1-1.6-2c-.2-.3 0-.5.1-.6l.5-.6.3-.5v-.5l-1-2.3c-.2-.6-.5-.5-.7-.5h-.6a1.2 1.2 0 0 0-.8.4 3.4 3.4 0 0 0-1.1 2.6 5.9 5.9 0 0 0 1.2 3.1 13.5 13.5 0 0 0 5.1 4.5c2.2.9 2.5.7 2.9.7a3 3 0 0 0 2-1.4 2.5 2.5 0 0 0 .2-1.4c-.1-.2-.3-.2-.6-.4Z"/></svg>
+  <span class="wa-label">Chat with us</span>
+</a>
+
+<!-- ============================ CART DRAWER ============================ -->
+<div class="cart-overlay" id="cartOverlay" hidden></div>
+
+<aside class="cart-drawer" id="cartDrawer" role="dialog" aria-modal="true" aria-labelledby="cartTitle" hidden>
+  <header class="cart-head">
+    <h3 id="cartTitle">Your Order</h3>
+    <button class="cart-close" id="cartClose" aria-label="Close cart">&times;</button>
+  </header>
+
+  <div class="cart-body" id="cartBody">
+    <ul class="cart-items" id="cartItems"></ul>
+
+    <div class="cart-empty" id="cartEmpty">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.55L21 8H7M10 21a1 1 0 1 0 0-2 1 1 0 0 0 0 2Zm8 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"/></svg>
+      <p><strong>Your cart is empty</strong></p>
+      <p class="tiny">Add a service or AMC plan to get started.</p>
+    </div>
+  </div>
+
+  <footer class="cart-foot">
+    <!-- Shown only when order records are switched on in app.js (BACKEND) -->
+    <div class="cust-block" id="custBlock" hidden>
+      <h4>Your details</h4>
+      <label class="field">
+        <span>Name</span>
+        <input type="text" id="custName" autocomplete="name" placeholder="Your full name" maxlength="60" />
+      </label>
+      <label class="field">
+        <span>Mobile number</span>
+        <input type="tel" id="custPhone" autocomplete="tel" inputmode="numeric"
+               placeholder="10-digit mobile number" maxlength="17" />
+      </label>
+      <p class="cust-error" id="custError" role="alert" hidden></p>
+    </div>
+
+    <div class="pay-choice">
+      <h4>Payment method</h4>
+      <div class="pay-options">
+        <label class="pay-opt">
+          <input type="radio" name="payMethod" value="Cash" checked />
+          <span>Cash</span>
+        </label>
+        <label class="pay-opt">
+          <input type="radio" name="payMethod" value="UPI" />
+          <span>UPI</span>
+        </label>
+      </div>
+      <p class="tiny">We accept Cash and UPI only.</p>
+    </div>
+
+    <div class="cart-upi" id="cartUpi" hidden>
+      <img src="assets/upi-qr.png" alt="UPI QR code — 9324534405@ptaxis" class="qr qr-sm" width="150" height="150" />
+      <div>
+        <p class="tiny">Scan &amp; pay <strong>9324534405@ptaxis</strong></p>
+        <a class="btn btn-outline btn-sm" id="cartPayLink" href="#" rel="noopener">Open UPI app</a>
+      </div>
+    </div>
+
+    <div class="cart-summary">
+      <div class="sum-row">
+        <span>Subtotal</span>
+        <span id="cartSubtotal">₹0</span>
+      </div>
+      <div class="sum-row">
+        <span id="cartGstLabel">GST @ 18%</span>
+        <span id="cartGst">₹0</span>
+      </div>
+      <p class="sum-row gstin-row" id="cartGstinRow" hidden>
+        <span>GSTIN</span>
+        <span id="cartGstin"></span>
+      </p>
+    </div>
+
+    <div class="cart-total">
+      <span>Total</span>
+      <strong id="cartTotal">₹0</strong>
+    </div>
+    <p class="tiny cart-gst-note" id="cartGstNote">All prices are exclusive of GST.</p>
+    <p class="tiny cart-enquiry-note" id="cartEnquiryNote" hidden>Includes items quoted on WhatsApp. Final amount confirmed after review.</p>
+
+    <button class="btn btn-primary btn-block" id="cartCheckout">Send order on WhatsApp</button>
+    <button class="btn btn-link btn-block" id="cartClear">Clear cart</button>
+  </footer>
+</aside>
+
+<!-- ============================ TOAST ============================ -->
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="app.js"></script>
+<!-- ============================================================
+     ADMIN PANEL
+     The staff dashboard lives inside this page. It stays hidden until
+     the API confirms a signed-in admin session, and every figure it
+     shows comes from /api/admin/*, which rejects any request without a
+     valid session cookie. A visitor downloads this empty shell and
+     nothing more - no order, customer or message data ever reaches
+     them. admin.js is loaded on demand when the panel is opened.
+     ============================================================ -->
+<div class="admin-panel" id="adminPanel" hidden>
+  <button class="panel-close" id="panelClose" type="button" aria-label="Close the admin panel">&times;</button>
+<div class="gate" id="gate">
+  <form class="gate-card" id="gateForm">
+    <img src="assets/logo-mark.png" alt="" class="gate-logo" width="56" height="55" />
+    <h1>Admin sign in</h1>
+    <p class="gate-sub">TRISHOOL ENTERPRISES &middot; staff only</p>
+
+    <label class="field">
+      <span>Email</span>
+      <input type="email" id="gateEmail" autocomplete="username"
+             placeholder="Your admin email address" required />
+    </label>
+
+    <label class="field">
+      <span>Password</span>
+      <input type="password" id="gatePassword" autocomplete="current-password"
+             placeholder="Your password" required />
+    </label>
+
+    <p class="cust-error" id="gateError" role="alert" hidden></p>
+
+    <button class="btn btn-primary btn-block" type="submit">Sign in</button>
+    <button class="btn btn-link btn-block" id="gateClose" type="button">&larr; Back to website</button>
+  </form>
+</div>
+
+
+<div class="admin-wrap" id="app" hidden>
+
+  <header class="admin-head">
+    <div class="admin-head-inner">
+      <div class="admin-brand">
+        <img src="assets/logo-mark.png" alt="" width="40" height="39" />
+        <div>
+          <strong>TRISHOOL ENTERPRISES</strong>
+          <span>Admin &middot; <span id="adminName">—</span></span>
+        </div>
+      </div>
+      <div class="admin-head-actions">
+        <button class="btn btn-outline btn-sm" id="refreshBtn" type="button">Refresh</button>
+        <button class="btn btn-ghost btn-sm" id="panelWebsiteBtn" type="button">Website</button>
+        <button class="btn btn-outline btn-sm" id="logoutBtn" type="button">Sign out</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="admin-main">
+
+    
+    <div class="stat-row">
+      <div class="stat"><strong id="sOrders">0</strong><span>Total orders</span></div>
+      <div class="stat"><strong id="sRevenue">₹0</strong><span>Order value</span></div>
+      <div class="stat"><strong id="sGst">₹0</strong><span>GST collected</span></div>
+      <div class="stat"><strong id="sMonth">₹0</strong><span>This month</span></div>
+      <div class="stat"><strong id="sNew">0</strong><span>New orders</span></div>
+      <div class="stat"><strong id="sCustomers">0</strong><span>Customers</span></div>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat"><strong id="sInquiries">0</strong><span>New inquiries</span></div>
+      <div class="stat"><strong id="sBookings">0</strong><span>Open bookings</span></div>
+      <div class="stat"><strong id="sReviews">0</strong><span>Reviews to approve</span></div>
+      <div class="stat"><strong id="sMessages">0</strong><span>New messages</span></div>
+    </div>
+
+    
+    <div class="tabs" role="tablist" aria-label="Sections">
+      <button class="tab is-active" data-tab="orders"    role="tab" aria-selected="true"  aria-controls="panelOrders"    type="button">Orders <span class="tab-badge" id="tabOrdersCount">0</span></button>
+      <button class="tab" data-tab="inquiries" role="tab" aria-selected="false" aria-controls="panelInquiries" type="button">Inquiries <span class="tab-badge" id="tabInquiryCount">0</span></button>
+      <button class="tab" data-tab="bookings" role="tab" aria-selected="false" aria-controls="panelBookings" type="button">Bookings <span class="tab-badge" id="tabBookingCount">0</span></button>
+      <button class="tab" data-tab="reviews"  role="tab" aria-selected="false" aria-controls="panelReviews"  type="button">Reviews <span class="tab-badge" id="tabReviewCount">0</span></button>
+      <button class="tab" data-tab="services" role="tab" aria-selected="false" aria-controls="panelServices" type="button">Services</button>
+      <button class="tab" data-tab="messages" role="tab" aria-selected="false" aria-controls="panelMessages" type="button">Messages <span class="tab-badge" id="tabMessageCount">0</span></button>
+      <button class="tab" data-tab="customers" role="tab" aria-selected="false" aria-controls="panelCustomers" type="button">Customers</button>
+    </div>
+
+    
+    <div class="panel" data-panel="orders" id="panelOrders" role="tabpanel">
+      <div class="toolbar">
+        <input type="search" id="searchOrders" class="search" placeholder="Search ref, name, phone or item…" />
+        <button class="btn btn-outline btn-sm" id="csvBtn" type="button">Export CSV</button>
+      </div>
+      <p class="admin-status" id="status" role="status">Loading…</p>
+      <div class="table-scroll">
+        <table class="orders">
+          <thead><tr>
+            <th>Order Ref</th><th>Date</th><th>Customer</th><th>Phone</th>
+            <th>Items</th><th class="num">Total</th><th>Payment</th><th>Status</th>
+          </tr></thead>
+          <tbody id="ordersBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    
+    <div class="panel" data-panel="inquiries" id="panelInquiries" role="tabpanel" hidden>
+      <p class="review-help tiny">
+        Every question a customer sent through the website, with the reference we
+        gave them. Change the status to keep track.
+      </p>
+      <div class="table-scroll">
+        <table class="orders">
+          <thead><tr>
+            <th>Reference</th><th>Date</th><th>Customer</th><th>Phone</th>
+            <th>Service</th><th>Message</th><th>Status</th>
+          </tr></thead>
+          <tbody id="inquiriesBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    
+    <div class="panel" data-panel="bookings" id="panelBookings" role="tabpanel" hidden>
+      <p class="review-help tiny">
+        Service bookings made from the website's "Book a service" form.
+      </p>
+      <div class="table-scroll">
+        <table class="orders">
+          <thead><tr>
+            <th>Reference</th><th>Date</th><th>Customer</th><th>Phone</th>
+            <th>Service</th><th>Preferred</th><th>Status</th>
+          </tr></thead>
+          <tbody id="bookingsBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    
+    <div class="panel" data-panel="reviews" id="panelReviews" role="tabpanel" hidden>
+      <p class="review-help tiny">
+        New reviews arrive as <strong>Pending</strong> and are not visible on the
+        website. Approve one to publish it.
+      </p>
+      <div class="table-scroll">
+        <table class="orders">
+          <thead><tr>
+            <th>Date</th><th>Customer</th><th>Rating</th><th>Service</th>
+            <th>Review</th><th>Status</th><th>Actions</th>
+          </tr></thead>
+          <tbody id="reviewsBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    
+    <div class="panel" data-panel="services" id="panelServices" role="tabpanel" hidden>
+      <div class="service-editor">
+        <h3 id="serviceFormTitle">Add a service</h3>
+        <form id="serviceForm" novalidate>
+          <input type="hidden" id="serviceId" />
+          <div class="se-row">
+            <label class="field">
+              <span>Name</span>
+              <input type="text" id="svcTitle" placeholder="Printer Repair" maxlength="120" required />
+            </label>
+            <label class="field">
+              <span>Price (&#8377;)</span>
+              <input type="number" id="svcPrice" placeholder="300" min="0" step="1" />
+            </label>
+            <label class="field se-icon">
+              <span>Icon</span>
+              <input type="text" id="svcIcon" placeholder="🖨️" maxlength="16" />
+            </label>
+          </div>
+          <label class="field">
+            <span>Description</span>
+            <textarea id="svcDesc" rows="2" maxlength="500" placeholder="What this service covers"></textarea>
+          </label>
+          <label class="se-check">
+            <input type="checkbox" id="svcEnquiry" />
+            <span>Price on request (no fixed price)</span>
+          </label>
+          <div class="rf-actions">
+            <button class="btn btn-primary btn-sm" type="submit">Save service</button>
+            <button class="btn btn-outline btn-sm" type="button" id="cancelServiceEdit" hidden>Cancel edit</button>
+            <button class="btn btn-link btn-sm" type="button" id="resetServiceForm">Clear</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="table-scroll">
+        <table class="orders">
+          <thead><tr>
+            <th>Service</th><th>Category</th><th class="num">Price</th>
+            <th>Description</th><th>Status</th><th>Actions</th>
+          </tr></thead>
+          <tbody id="servicesBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    
+    <div class="panel" data-panel="messages" id="panelMessages" role="tabpanel" hidden>
+      <p class="review-help tiny">Submissions from the contact form.</p>
+      <div class="table-scroll">
+        <table class="orders">
+          <thead><tr>
+            <th>Date</th><th>Customer</th><th>Phone</th>
+            <th>Subject</th><th>Message</th><th>Status</th>
+          </tr></thead>
+          <tbody id="messagesBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    
+    <div class="panel" data-panel="customers" id="panelCustomers" role="tabpanel" hidden>
+      <p class="review-help tiny">
+        Everyone who has ordered, booked, inquired or reviewed, with their totals.
+      </p>
+      <div class="table-scroll">
+        <table class="orders">
+          <thead><tr>
+            <th>Name</th><th>Phone</th><th>Email</th>
+            <th class="num">Orders</th><th class="num">Inquiries</th>
+            <th class="num">Spent</th><th>First seen</th>
+          </tr></thead>
+          <tbody id="customersBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <p class="tiny admin-note" id="adminEmail">—</p>
+
+  </div>
+</div>
+</div>
+
+</body>
+</html>

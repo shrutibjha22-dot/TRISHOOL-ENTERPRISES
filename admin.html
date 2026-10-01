@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Admin — TRISHOOL ENTERPRISES</title>
+<!-- Admin only. Keep this page out of search engines. -->
+<meta name="robots" content="noindex, nofollow, noarchive" />
+<meta name="description" content="Private admin dashboard for Trishool Enterprises. Authorised staff only." />
+<meta name="referrer" content="no-referrer" />
+<meta name="theme-color" content="#0B2A5B" />
+<link rel="icon" href="assets/icon.png" type="image/png" />
+<link rel="stylesheet" href="styles.css" />
+<link rel="stylesheet" href="admin.css" />
+</head>
+<body class="admin-body">
+
+<!-- One <main> wraps both the lock screen and the dashboard, so the page
+     always exposes exactly one main landmark. -->
+<main>
+
+<!-- ============================ SIGN IN ============================ -->
+<div class="gate" id="gate">
+  <form class="gate-card" id="gateForm">
+    <img src="assets/logo-mark.png" alt="" class="gate-logo" width="56" height="55" />
+    <h1>Admin sign in</h1>
+    <p class="gate-sub">TRISHOOL ENTERPRISES &middot; staff only</p>
+
+    <label class="field">
+      <span>Email</span>
+      <input type="email" id="gateEmail" autocomplete="username"
+             placeholder="Your admin email address" required />
+    </label>
+
+    <label class="field">
+      <span>Password</span>
+      <input type="password" id="gatePassword" autocomplete="current-password"
+             placeholder="Your password" required />
+    </label>
+
+    <p class="cust-error" id="gateError" role="alert" hidden></p>
+
+    <button class="btn btn-primary btn-block" type="submit">Sign in</button>
+    <a class="btn btn-link btn-block" href="index.html">&larr; Back to website</a>
+  </form>
+</div>
+
+<!-- ============================ DASHBOARD ============================ -->
+<div class="admin-wrap" id="app" hidden>
+
+  <header class="admin-head">
+    <div class="admin-head-inner">
+      <div class="admin-brand">
+        <img src="assets/logo-mark.png" alt="" width="40" height="39" />
+        <div>
+          <strong>TRISHOOL ENTERPRISES</strong>
+          <span>Admin &middot; <span id="adminName">—</span></span>
+        </div>
+      </div>
+      <div class="admin-head-actions">
+        <button class="btn btn-outline btn-sm" id="refreshBtn" type="button">Refresh</button>
+        <a class="btn btn-ghost btn-sm" href="index.html">Website</a>
+        <button class="btn btn-outline btn-sm" id="logoutBtn" type="button">Sign out</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="admin-main">
+
+    <!-- ---------- counters ---------- -->
+    <div class="stat-row">
+      <div class="stat"><strong id="sOrders">0</strong><span>Total orders</span></div>
+      <div class="stat"><strong id="sRevenue">₹0</strong><span>Order value</span></div>
+      <div class="stat"><strong id="sGst">₹0</strong><span>GST collected</span></div>
+      <div class="stat"><strong id="sMonth">₹0</strong><span>This month</span></div>
+      <div class="stat"><strong id="sNew">0</strong><span>New orders</span></div>
+      <div class="stat"><strong id="sCustomers">0</strong><span>Customers</span></div>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat"><strong id="sInquiries">0</strong><span>New inquiries</span></div>
+      <div class="stat"><strong id="sBookings">0</strong><span>Open bookings</span></div>
+      <div class="stat"><strong id="sReviews">0</strong><span>Reviews to approve</span></div>
+      <div class="stat"><strong id="sMessages">0</strong><span>New messages</span></div>
+    </div>
+
+    <!-- ---------- tabs ---------- -->
+    <div class="tabs" role="tablist" aria-label="Sections">
+      <button class="tab is-active" data-tab="orders"    role="tab" aria-selected="true"  aria-controls="panelOrders"    type="button">Orders <span class="tab-badge" id="tabOrdersCount">0</span></button>
+      <button class="tab" data-tab="inquiries" role="tab" aria-selected="false" aria-controls="panelInquiries" type="button">Inquiries <span class="tab-badge" id="tabInquiryCount">0</span></button>
+      <button class="tab" data-tab="bookings" role="tab" aria-selected="false" aria-controls="panelBookings" type="button">Bookings <span class="tab-badge" id="tabBookingCount">0</span></button>
+      <button class="tab" data-tab="reviews"  role="tab" aria-selected="false" aria-controls="panelReviews"  type="button">Reviews <span class="tab-badge" id="tabReviewCount">0</span></button>
+      <button class="tab" data-tab="services" role="tab" aria-selected="false" aria-controls="panelServices" type="button">Services</button>
+      <button class="tab" data-tab="messages" role="tab" aria-selected="false" aria-controls="panelMessages" type="button">Messages <span class="tab-badge" id="tabMessageCount">0</span></button>
+      <button class="tab" data-tab="customers" role="tab" aria-selected="false" aria-controls="panelCustomers" type="button">Customers</button>
+    </div>
+
+    <!-- ---------- orders ---------- -->
+    <div class="panel" data-panel="orders" id="panelOrders" role="tabpanel">
+      <div class="toolbar">
+        <input type="search" id="searchOrders" class="search" placeholder="Search ref, name, phone or item…" />
+        <button class="btn btn-outline btn-sm" id="csvBtn" type="button">Export CSV</button>
+      </div>
+      <p class="admin-status" id="status" role="status">Loading…</p>
+      <div class="table-scroll">
+        <table class="orders">
+          <thead><tr>
+            <th>Order Ref</th><th>Date</th><th>Customer</th><th>Phone</th>
+            <th>Items</th><th class="num">Total</th><th>Payment</th><th>Status</th>
+          </tr></thead>
+          <tbody id="ordersBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ---------- inquiries ---------- -->
+    <div class="panel" data-panel="inquiries" id="panelInquiries" role="tabpanel" hidden>
+      <p class="review-help tiny">
+        Every question a customer sent through the website, with the reference we
+        gave them. Change the status to keep track.
+      </p>
+      <div class="table-scroll">
+        <table class="orders">
+          <thead><tr>
+            <th>Reference</th><th>Date</th><th>Customer</th><th>Phone</th>
+            <th>Service</th><th>Message</th><th>Status</th>
+          </tr></thead>
+          <tbody id="inquiriesBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ---------- bookings ---------- -->
+    <div class="panel" data-panel="bookings" id="panelBookings" role="tabpanel" hidden>
+      <p class="review-help tiny">
+        Service bookings made from the website's "Book a service" form.
+      </p>
+      <div class="table-scroll">
+        <table class="orders">
+          <thead><tr>
+            <th>Reference</th><th>Date</th><th>Customer</th><th>Phone</th>
+            <th>Service</th><th>Preferred</th><th>Status</th>
+          </tr></thead>
+          <tbody id="bookingsBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ---------- reviews ---------- -->
+    <div class="panel" data-panel="reviews" id="panelReviews" role="tabpanel" hidden>
+      <p class="review-help tiny">
+        New reviews arrive as <strong>Pending</strong> and are not visible on the
+        website. Approve one to publish it.
+      </p>
+      <div class="table-scroll">
+        <table class="orders">
+          <thead><tr>
+            <th>Date</th><th>Customer</th><th>Rating</th><th>Service</th>
+            <th>Review</th><th>Status</th><th>Actions</th>
+          </tr></thead>
+          <tbody id="reviewsBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ---------- services ---------- -->
+    <div class="panel" data-panel="services" id="panelServices" role="tabpanel" hidden>
+      <div class="service-editor">
+        <h3 id="serviceFormTitle">Add a service</h3>
+        <form id="serviceForm" novalidate>
+          <input type="hidden" id="serviceId" />
+          <div class="se-row">
+            <label class="field">
+              <span>Name</span>
+              <input type="text" id="svcTitle" placeholder="Printer Repair" maxlength="120" required />
+            </label>
+            <label class="field">
+              <span>Price (&#8377;)</span>
+              <input type="number" id="svcPrice" placeholder="300" min="0" step="1" />
+            </label>
+            <label class="field se-icon">
+              <span>Icon</span>
+              <input type="text" id="svcIcon" placeholder="🖨️" maxlength="16" />
+            </label>
+          </div>
+          <label class="field">
+            <span>Description</span>
+            <textarea id="svcDesc" rows="2" maxlength="500" placeholder="What this service covers"></textarea>
+          </label>
+          <label class="se-check">
+            <input type="checkbox" id="svcEnquiry" />
+            <span>Price on request (no fixed price)</span>
+          </label>
+          <div class="rf-actions">
+            <button class="btn btn-primary btn-sm" type="submit">Save service</button>
+            <button class="btn btn-outline btn-sm" type="button" id="cancelServiceEdit" hidden>Cancel edit</button>
+            <button class="btn btn-link btn-sm" type="button" id="resetServiceForm">Clear</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="table-scroll">
+        <table class="orders">
+          <thead><tr>
+            <th>Service</th><th>Category</th><th class="num">Price</th>
+            <th>Description</th><th>Status</th><th>Actions</th>
+          </tr></thead>
+          <tbody id="servicesBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ---------- messages ---------- -->
+    <div class="panel" data-panel="messages" id="panelMessages" role="tabpanel" hidden>
+      <p class="review-help tiny">Submissions from the contact form.</p>
+      <div class="table-scroll">
+        <table class="orders">
+          <thead><tr>
+            <th>Date</th><th>Customer</th><th>Phone</th>
+            <th>Subject</th><th>Message</th><th>Status</th>
+          </tr></thead>
+          <tbody id="messagesBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ---------- customers ---------- -->
+    <div class="panel" data-panel="customers" id="panelCustomers" role="tabpanel" hidden>
+      <p class="review-help tiny">
+        Everyone who has ordered, booked, inquired or reviewed, with their totals.
+      </p>
+      <div class="table-scroll">
+        <table class="orders">
+          <thead><tr>
+            <th>Name</th><th>Phone</th><th>Email</th>
+            <th class="num">Orders</th><th class="num">Inquiries</th>
+            <th class="num">Spent</th><th>First seen</th>
+          </tr></thead>
+          <tbody id="customersBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <p class="tiny admin-note" id="adminEmail">—</p>
+
+  </main>
+</div>
+
+</main>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="admin.js"></script>
+</body>
+</html>

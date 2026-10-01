@@ -1,0 +1,69 @@
+# Render.com blueprint - deploy with one click.
+#
+#   1. Push this repository to GitHub
+#   2. Go to https://render.com and create a New > Blueprint
+#   3. Point it at your repository
+#   4. Render reads this file, creates the database and the web service,
+#      and wires them together
+#
+# The MySQL instance it creates is FREE, but free databases on Render are
+# deleted after 30 days. For a permanent deployment use a paid database or a
+# different host - see DEPLOYMENT.md.
+#
+# You will be asked to set these in the Render dashboard before the first deploy:
+#
+#   ADMIN_SEED_EMAIL      your own admin email address
+#   ADMIN_SEED_PASSWORD   a strong password you choose
+#   JWT_SECRET            a long random string (see DEPLOYMENT.md for the command)
+
+services:
+  - type: web
+    name: trishool-website
+    runtime: node
+    plan: free
+    region: singapore
+    buildCommand: npm ci --omit=dev
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: "22"
+      - key: DB_HOST
+        fromDatabase:
+          name: trishool-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: trishool-db
+          property: port
+      - key: DB_USER
+        fromDatabase:
+          name: trishool-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: trishool-db
+          property: password
+      - key: DB_NAME
+        fromDatabase:
+          name: trishool-db
+          property: database
+      - key: JWT_SECRET
+        generateValue: true
+      - key: AUTH_COOKIE_SECURE
+        value: "true"
+      - key: ADMIN_SEED_EMAIL
+        sync: false
+      - key: ADMIN_SEED_PASSWORD
+        sync: false
+      - key: PUBLIC_ORIGIN
+        sync: false
+
+databases:
+  - name: trishool-db
+    databaseName: trishool_db
+    user: trishool
+    plan: free
+    region: singapore

@@ -1,0 +1,34 @@
+{
+  "name": "trishool-enterprises",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Backend API and admin dashboard for the Trishool Enterprises website",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node --watch server/index.js",
+    "setup": "npm install && npm run db:setup && npm run db:seed",
+    "db:setup": "node server/db/setup.js",
+    "db:seed": "node server/db/seed.js",
+    "db:reset": "node server/db/setup.js --fresh",
+    "db:demo": "node server/db/demo.js && node server/db/seed.js",
+    "smoke": "node server/test/smoke.js",
+    "check:sql": "python tools/check_db_params.py",
+    "check:exports": "node tools/check_exports.js",
+    "check": "npm run check:exports && npm run check:sql"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "compression": "^1.7.4",
+    "cookie-parser": "^1.4.6",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-rate-limit": "^7.4.0",
+    "helmet": "^7.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mysql2": "^3.11.0"
+  }
+}

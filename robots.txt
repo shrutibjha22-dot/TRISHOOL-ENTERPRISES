@@ -1,0 +1,11 @@
+# Trishool Enterprises
+# Customers should find every page, so everything is allowed by default.
+
+User-agent: *
+Allow: /
+
+# The order-records dashboard is private. It is already unlinked from the
+# public site and marked noindex in its HTML; this is a second layer.
+Disallow: /admin.html
+Disallow: /admin.js
+Disallow: /admin.css

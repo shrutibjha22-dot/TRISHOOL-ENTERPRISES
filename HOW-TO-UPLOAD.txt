@@ -1,0 +1,99 @@
+============================================================
+  UPLOAD THESE FILES TO GITHUB
+============================================================
+
+  This folder contains ONLY the files that belong in the
+  repository. It is deliberately missing:
+
+      .env              your real passwords - never upload it
+      node_modules/     1,197 downloaded files - "npm install"
+                        recreates them on any computer
+
+  Both are listed in .gitignore, so if you use the git
+  command line they are excluded automatically.
+
+
+------------------------------------------------------------
+  STEP 1 - create the repository
+------------------------------------------------------------
+
+  1. Go to https://github.com  and sign in
+  2. Click the "+" top right  ->  "New repository"
+  3. Repository name:  trishool-website
+  4. Choose "Public" (or Private if you prefer)
+  5. IMPORTANT: leave "Add a README file" UNCHECKED
+  6. Click "Create repository"
+
+
+------------------------------------------------------------
+  STEP 2 - upload the files
+------------------------------------------------------------
+
+  On the new repository page click:
+
+      "uploading an existing file"
+
+  Then open this folder and drag in EVERYTHING inside it:
+
+      19 items in the root
+        .vscode/  android/  assets/  icons/  server/  tools/
+        .env.example  .gitignore  admin.css  admin.html
+        admin.js  ALLOW-PHONE-ACCESS.bat  app.js  index.html
+        manifest.webmanifest  package-lock.json  package.json
+        README.md  render.yaml  robots.txt
+        START-READ-ME-FIRST.txt  START-WEBSITE.bat
+        styles.css  sw.js
+
+  Total: 54 files.
+
+  Wait for the green bar to finish, then click
+  "Commit changes".
+
+
+------------------------------------------------------------
+  STEP 3 - check you did it right
+------------------------------------------------------------
+
+  On the repository page, confirm:
+
+      .env.example      IS there   (the blank template)
+      .gitignore        IS there
+      .env              is NOT there
+      node_modules      is NOT there
+
+
+------------------------------------------------------------
+  WHAT HAPPENS NEXT
+------------------------------------------------------------
+
+  Uploading to GitHub gives you the source code, not a live
+  website. GitHub Pages only serves static files, and this
+  project needs Node.js and MySQL to run.
+
+  To get an actual public web address, use the render.yaml
+  file that is in this folder:
+
+      https://render.com  ->  New  ->  Blueprint
+      ->  point it at your repository
+
+  Render will create the server and the database for you.
+  Their free MySQL is deleted after 30 days, so for
+  something permanent you would need the paid database.
+
+
+------------------------------------------------------------
+  HOW SOMEONE ELSE RUNS IT AFTER CLONING
+------------------------------------------------------------
+
+      copy .env.example .env     fill in DB_PASSWORD,
+                                  ADMIN_SEED_EMAIL and
+                                  ADMIN_SEED_PASSWORD
+      npm install
+      npm run db:setup
+      npm run db:seed            prints a password if blank
+      npm start
+
+  Or on Windows just double-click START-WEBSITE.bat, which
+  does the database and the first-time setup for you.
+
+============================================================

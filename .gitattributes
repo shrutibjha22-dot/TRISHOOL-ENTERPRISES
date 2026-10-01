@@ -1,0 +1,19 @@
+# Normalise line endings.
+#
+# The files are authored on Windows, so they are stored with CRLF. Git checks
+# them out as CRLF on Windows and LF on Linux, so a checkout on either system
+# behaves the same and diffs stay clean.
+* text=auto eol=lf
+
+# Windows launcher scripts must stay CRLF, or they will not run.
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Everything else is binary - never touch it.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.svg text eol=lf

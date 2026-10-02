@@ -1473,13 +1473,45 @@ const SERVER_URL = 'http://127.0.0.1:3000';
 /** True when this page was opened from disk rather than from the server. */
 const openedAsFile = () => location.protocol === 'file:';
 
+/** Is the machine that hosts the dashboard actually switched on and running? */
+async function adminHostReachable() {
+  const url = BACKEND.adminUrl || `${SERVER_URL}/admin.html`;
+  try {
+    // The page is not needed - only an answer. `no-cors` gives an opaque
+    // response, but reaching it at all proves the server is up.
+    await fetch(url, { mode: 'no-cors', cache: 'no-store' });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Tell the user what to do, instead of letting the browser show its own
+ * "site can't be reached" page. That message names a port number and gives no
+ * clue, which is exactly what happens when the dashboard host is switched off.
+ */
+function adminOfflineNotice() {
+  const url = BACKEND.adminUrl || `${SERVER_URL}/admin.html`;
+  toast('The admin dashboard is not running. Start it with START-WEBSITE.bat, then click Admin again.');
+  console.warn(
+    `[admin] ${url} is not reachable. Start the server (START-WEBSITE.bat) and try again.`
+  );
+}
+
 async function openAdmin() {
   // Opened from disk, or served from a static host with no API behind it.
   // Either way there is nothing for the in-page panel to talk to, so the
   // browser goes to where the dashboard actually runs instead of showing a
   // sign-in form that can never succeed.
   if (openedAsFile() || !(await apiAvailable())) {
-    location.href = BACKEND.adminUrl || `${SERVER_URL}/admin.html`;
+    // Only navigate if that host is up. Sending the browser to a machine that
+    // is off just produces a dead end with no explanation.
+    if (await adminHostReachable()) {
+      location.href = BACKEND.adminUrl || `${SERVER_URL}/admin.html`;
+    } else {
+      adminOfflineNotice();
+    }
     return;
   }
 

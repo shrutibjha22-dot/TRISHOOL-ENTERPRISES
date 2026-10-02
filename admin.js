@@ -55,7 +55,27 @@ async function redirectIfNoApi() {
   if (ok || !BACKEND.adminUrl) return;
   if (location.href === BACKEND.adminUrl) return;
 
-  location.replace(BACKEND.adminUrl);
+  // Only move the browser if that host is actually up. Navigating to a
+  // machine that is switched off just produces a dead end.
+  let reachable = false;
+  try {
+    await fetch(BACKEND.adminUrl, { mode: 'no-cors', cache: 'no-store' });
+    reachable = true;
+  } catch { reachable = false; }
+
+  if (reachable) {
+    location.replace(BACKEND.adminUrl);
+    return;
+  }
+
+  // Say so on this page instead, where it can be explained.
+  const box = $('#gateError');
+  if (box) {
+    box.hidden = false;
+    box.textContent =
+      'The admin dashboard is not running. Start it with START-WEBSITE.bat ' +
+      '(or deploy the backend), then reload this page.';
+  }
 }
 
 const ORDER_STATUSES   = ['New', 'Confirmed', 'In Progress', 'Completed', 'Cancelled'];

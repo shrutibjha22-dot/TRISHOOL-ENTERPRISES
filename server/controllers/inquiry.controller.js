@@ -166,6 +166,19 @@ exports.createBooking = asyncHandler(async (req, res) => {
   if (b.preferredDate && !/^\d{4}-\d{2}-\d{2}$/.test(str(b.preferredDate))) {
     problems.push('Preferred date must be YYYY-MM-DD');
   }
+  // A booking for a day that has already gone is never what the customer meant,
+  // and it would sit in the admin's list as an impossible job. Today itself is
+  // allowed, since a same-day visit is a normal request.
+  //
+  // Both sides are plain YYYY-MM-DD strings, so comparing them as text is both
+  // correct and free of timezone trouble that parsing to a Date would invite.
+  if (b.preferredDate && /^\d{4}-\d{2}-\d{2}$/.test(str(b.preferredDate))) {
+    const today = new Date();
+    const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    if (str(b.preferredDate) < todayStr) {
+      problems.push('Preferred date cannot be in the past');
+    }
+  }
   if (problems.length) return res.status(400).json({ ok: false, error: problems[0], fields: problems });
 
   const service = b.serviceId || b.service ? await services.resolveService(b.serviceId || b.service) : null;

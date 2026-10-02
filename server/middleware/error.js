@@ -28,10 +28,21 @@ function errorHandler(err, req, res, _next) {
   const status = err.status || 500;
   if (status >= 500) console.error('[error]', err);
 
+  /* The codes handled above are ours and safe to name. Anything else on a 5xx
+     is a raw driver code - ER_NO_SUCH_TABLE and friends - which tells a caller
+     which database engine is in use and what it is called. Useful while
+     developing, so it stays on outside production and is withheld on a live
+     site, where the full detail has already gone to the server log. */
+  const ownCode = ['DUPLICATE', 'DB_DOWN', 'BAD_JSON'];
+  const isServerError = status >= 500;
+  const isProduction = process.env.NODE_ENV === 'production';
+
   res.status(status).json({
     ok: false,
-    error: status >= 500 ? 'Something went wrong on our side' : err.message,
-    code: err.code || 'ERROR'
+    error: isServerError ? 'Something went wrong on our side' : err.message,
+    code: (!isServerError || !isProduction || ownCode.includes(err.code))
+      ? (err.code || 'ERROR')
+      : 'SERVER_ERROR'
   });
 }
 

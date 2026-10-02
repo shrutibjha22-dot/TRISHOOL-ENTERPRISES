@@ -590,6 +590,56 @@ function initAdmin() {
   $('#logoutBtn').addEventListener('click', logout);
   $('#refreshBtn').addEventListener('click', () => refresh().then((ok) => ok && toast('Refreshed')));
 
+  /* --- destructive actions --- */
+
+  /**
+   * Ask for confirmation without a browser dialog.
+   *
+   * The two deletes used the browser's own confirm(), which looked nothing like
+   * the rest of the dashboard and could be suppressed by the browser - when
+   * that happens it returns false silently and the delete simply appears not
+   * to work, with nothing on screen to say why.
+   *
+   * Instead the button the admin already clicked becomes the confirmation: it
+   * asks to be tapped again and reverts by itself after a few seconds. There is
+   * no dialog to dismiss, and no way to be left sitting in a confirming state
+   * if the row is re-rendered underneath.
+   *
+   * Returns true only on that second tap, so the caller reads naturally.
+   */
+  function confirmDestructive(btn, question) {
+    // A second tap on this button means go ahead.
+    if (btn.dataset.armed === '1') {
+      disarmDestructive(btn);
+      return true;
+    }
+
+    // Only one button is ever armed, so an earlier click on a different row
+    // cannot leave two rows waiting for confirmation. Done *after* the check
+    // above, otherwise it would disarm the very button being tested.
+    $$('[data-armed="1"]').forEach(disarmDestructive);
+
+    btn.dataset.label = btn.textContent;
+    btn.dataset.armed = '1';
+    btn.textContent = question;
+    btn.title = 'Click again to confirm';
+    // Held outside the dataset so a re-rendered button cannot leave it armed.
+    btn._disarmTimer = setTimeout(() => disarmDestructive(btn), 4000);
+    return false;
+  }
+
+  /** Return an armed button to its normal label and appearance. */
+  function disarmDestructive(btn) {
+    clearTimeout(btn._disarmTimer);
+    delete btn._disarmTimer;
+    delete btn.dataset.armed;
+    btn.removeAttribute('title');
+    if (btn.dataset.label) {
+      btn.textContent = btn.dataset.label;
+      delete btn.dataset.label;
+    }
+  }
+
   /* --- tabs --- */
   $$('.tab').forEach((t) => t.addEventListener('click', () => showTab(t.dataset.tab)));
 
@@ -642,7 +692,7 @@ function initAdmin() {
     }
 
     const del = e.target.closest('[data-review-del]');
-    if (del && confirm('Delete this review permanently?')) {
+    if (del && confirmDestructive(del, 'Tap again to delete')) {
       try {
         await req('DELETE', `/admin/reviews/${del.dataset.reviewDel}`);
         await refresh();
@@ -667,7 +717,7 @@ function initAdmin() {
     }
 
     const delSvc = e.target.closest('[data-service-del]');
-    if (delSvc && confirm('Delete this service?')) {
+    if (delSvc && confirmDestructive(delSvc, 'Tap again to delete')) {
       try {
         const res = await req('DELETE', `/admin/services/${delSvc.dataset.serviceDel}`);
         await refresh();

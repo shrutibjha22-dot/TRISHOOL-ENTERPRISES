@@ -66,6 +66,17 @@ services:
         value: "true"
       - key: JWT_SECRET
         generateValue: true
+      # Render forwards every request through its own proxy, so without this
+      # Express cannot tell the visitors apart. The rate limiter counts per IP,
+      # so all customers would share ONE bucket of 60 form submissions an hour
+      # and everyone would be locked out together once it ran out.
+      #
+      # 1 means "trust exactly one hop", which is correct here: Render appends
+      # the real visitor's address to X-Forwarded-For. It is not left on by
+      # default, because trusting the whole header would let anyone forge their
+      # address and bypass the limiter.
+      - key: TRUST_PROXY
+        value: "1"
       # --- the admin account. Render prompts for both. ---
       - key: ADMIN_SEED_EMAIL
         sync: false

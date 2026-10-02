@@ -182,6 +182,31 @@ async function api(method, path, body) {
   check('booking reference generated', /^TRH-BKG-[A-Z2-9]{4}$/.test(bkg.data?.booking?.ref || ''),
     bkg.data?.booking?.ref);
 
+  // A date that has already passed is never a real request. It was accepted
+  // once because the value was only checked for shape, not for being ahead of
+  // today, which left impossible jobs sitting in the admin's list.
+  const past = await api('POST', '/api/bookings', {
+    name: 'Smoke Tester', phone: '9876543210',
+    preferredDate: '2020-01-01', message: 'Booking for a day that has gone.'
+  });
+  check('booking rejects a date in the past', past.status === 400,
+    `status=${past.status}`);
+
+  const malformed = await api('POST', '/api/bookings', {
+    name: 'Smoke Tester', phone: '9876543210',
+    preferredDate: '05-10-2026', message: 'Wrong date format entirely.'
+  });
+  check('booking rejects a malformed date', malformed.status === 400,
+    `status=${malformed.status}`);
+
+  const today = new Date();
+  const isoToday = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+  const sameDay = await api('POST', '/api/bookings', {
+    name: 'Smoke Tester', phone: '9876543210',
+    preferredDate: isoToday, message: 'A same-day visit, which must be allowed.'
+  });
+  check('booking allows today', sameDay.status === 201, `status=${sameDay.status}`);
+
   /* ---------------- public: order + GST ---------------- */
   console.log(`\n${c.d}-- order + GST --${c.x}`);
   const ord = await api('POST', '/api/orders', {

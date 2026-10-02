@@ -626,6 +626,13 @@ function renderCart() {
   $('#cartCheckout').textContent = hasItems
     ? `Send order on WhatsApp · ${money(grand)}`
     : 'Send order on WhatsApp';
+
+  /* Any change to the cart invalidates the last receipt: the reference shown
+     belongs to an order that no longer matches what is in the drawer. Hiding
+     it here covers add, remove, quantity change and clear, since all of them
+     funnel through renderCart. showOrderReceipt does not, so the receipt it
+     draws survives until the cart really does change. */
+  $('#cartReceipt').hidden = true;
 }
 
 /** Show the customer fields only when orders are actually being recorded. */
@@ -1002,18 +1009,25 @@ function buildOrderRecord(customer, orderRef, method) {
 }
 
 /**
- * Save the order to the records sheet.
+ * Save the order to the database.
  *
- * Fire-and-forget on purpose: the customer must reach WhatsApp even if the
- * sheet is unreachable, so a failure is logged and never blocks checkout.
+ * The customer must reach WhatsApp regardless, so this never blocks checkout.
+ * It returns the server's saved order (which carries the real reference) or
+ * null, so the drawer can show them a receipt.
  */
 async function saveOrder(record) {
-  if (!backendOn()) return false;
+  if (!backendOn()) return null;
+
+  // A hung request must not strand the customer on a spinner, so the wait is
+  // capped. fetch itself has no timeout, hence the explicit race.
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 10000);
 
   try {
     const res = await fetch(api('/orders'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      signal: controller.signal,
       body: JSON.stringify({
         name: record.name,
         phone: record.phone,
@@ -1022,14 +1036,31 @@ async function saveOrder(record) {
         subtotal: record.subtotal
       })
     });
-    return res.ok;
+    if (!res.ok) return null;
+    const data = await res.json().catch(() => null);
+    return data?.order || null;
   } catch (err) {
     console.warn('Order record not saved:', err);
-    return false;
+    return null;
+  } finally {
+    clearTimeout(timer);
   }
 }
 
+/**
+ * Place the order.
+ *
+ * Guarded against a second tap. Saving the order before opening WhatsApp means
+ * there is now a visible pause where the button is still live, and a double
+ * tap - easy to do on a phone - would otherwise save two orders and open two
+ * WhatsApp tabs. The flag makes repeat taps do nothing at all, rather than
+ * relying on the disabled attribute alone.
+ */
+let checkingOut = false;
+
 function checkout() {
+  if (checkingOut) return;
+
   if (cart.length === 0) {
     toast('Your cart is empty — add a service first');
     return;
@@ -1047,15 +1078,106 @@ function checkout() {
     customer = result;
   }
 
-  const method  = $('input[name="payMethod"]:checked')?.value || 'Cash';
-  const orderRef = newOrderRef();
-  const message  = buildOrderMessage(customer, orderRef);
-  const record   = buildOrderRecord(customer, orderRef, method);
+  const method = $('input[name="payMethod"]:checked')?.value || 'Cash';
+
+  checkingOut = true;
+  const btn = $('#cartCheckout');
+  const originalLabel = btn.textContent;
+  btn.disabled = true;
+
+  // No records to keep: just open WhatsApp and be done.
+  if (!backendOn()) {
+    checkingOut = false;
+    btn.disabled = false;
+    window.open(waLink(buildOrderMessage(customer, newOrderRef())), '_blank', 'noopener');
+    toast('Opening WhatsApp with your order…');
+    return;
+  }
+
+  // With records on, the reference is saved *first* so the one the customer
+  // quotes on WhatsApp is the one we can actually look up. Generating it here
+  // meant WhatsApp carried TRH-QJMX6K while the database held TRH-ORD-EY6K,
+  // so an admin searching for the customer's reference found nothing.
+  //
+  // The save is capped by a timeout so a slow or hanging database can never
+  // stop the customer reaching WhatsApp - they fall back to a local reference
+  // and the receipt warns them we do not have the order yet.
+  const record = buildOrderRecord(customer, newOrderRef(), method);
+
+  btn.textContent = 'Saving your order…';
+
+  saveOrder(record)
+    .catch(() => null)
+    .then((saved) => {
+      checkingOut = false;
+      btn.disabled = false;
+      btn.textContent = originalLabel;
+      finishCheckout(customer, method, record.orderRef, saved);
+    });
+}
+
+/**
+ * Open WhatsApp with the confirmed reference and show the receipt.
+ *
+ * Runs whether or not the save succeeded, so the customer is never left
+ * waiting on a request that has already given up.
+ */
+function finishCheckout(customer, method, localRef, saved) {
+  const ref = saved?.ref || localRef;
+  const message = buildOrderMessage(customer, ref);
 
   window.open(waLink(message), '_blank', 'noopener');
-  toast('Opening WhatsApp with your order…');
+  toast(saved ? 'Order saved — opening WhatsApp…' : 'Opening WhatsApp with your order…');
 
-  if (backendOn()) saveOrder(record);
+  showOrderReceipt(saved ? ref : null);
+}
+
+/**
+ * Tell the customer their order was received, with the reference we gave it.
+ *
+ * `ref` is the saved reference, or null when the order did not reach us.
+ * Without this the only sign anything happened was a toast that vanishes, and
+ * the cart stayed full - so a customer returning later could place the same
+ * order twice and have no way of knowing. The cart is deliberately left alone
+ * rather than cleared: if WhatsApp did not open, throwing their work away
+ * would be worse than the risk of a repeat.
+ */
+function showOrderReceipt(ref) {
+  const box = $('#cartReceipt');
+  if (!box) return;
+
+  box.hidden = false;
+
+  if (ref) {
+    box.innerHTML = `
+      <p class="cart-receipt-ok">
+        <strong>Order received.</strong>
+        Your reference is <b>${esc(ref)}</b>.
+        We have it on file and will confirm shortly.
+      </p>
+      <p class="tiny">
+        WhatsApp did not open? Call us on the number above, or send the
+        reference to ${esc(BUSINESS.whatsapp.slice(-10))}.
+      </p>
+      <p class="tiny">
+        Your cart has been kept so nothing is lost. Clear it with
+        "Clear cart" below once you are happy.
+      </p>`;
+  } else {
+    box.innerHTML = `
+      <p class="cart-receipt-warn">
+        <strong>WhatsApp should have opened with your order.</strong>
+        If it did not, please call us or send the details on WhatsApp - we
+        will not have this order on file yet.
+      </p>`;
+  }
+
+  // Bring the receipt into view, but only if the browser actually scrolls.
+  // Wrapped because a stubbed or headless environment can throw here, and the
+  // receipt stays readable in the drawer either way.
+  try {
+    box.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  } catch { /* scrolling is a nicety, not a requirement */ }
 }
 
 /* ---------------------------------------------------------
@@ -1717,6 +1839,17 @@ function initInquireForms() {
   $('#panelBooking')?.addEventListener('submit', submitBooking);
   $('#panelInquiry')?.addEventListener('submit', submitInquiry);
   $('#contactForm')?.addEventListener('submit', submitContact);
+
+  // Stop the calendar offering days that have already gone. Set in JS rather
+  // than as a `min` attribute in the HTML so it is always today, not the day
+  // the file happened to be written. The server rejects past dates too - this
+  // just means the customer never gets that far.
+  const bkDate = $('#bkDate');
+  if (bkDate) {
+    const now = new Date();
+    const iso = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    bkDate.min = iso;
+  }
 
   fillServiceSelect($('#bkService'));
   fillServiceSelect($('#iqService'), { includeBlank: true, blankLabel: 'Not sure yet' });

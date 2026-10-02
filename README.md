@@ -248,6 +248,13 @@ node -e "console.log(require('crypto').randomBytes(48).toString('base64url'))"
 
 ## 8. Running it
 
+> **Where it runs matters.** On GitHub Pages the site is a *static host*: it can
+> serve the files but not run this backend, so the forms and the admin dashboard
+> have nothing to talk to. One address serves everything — the website, forms
+> that save, and the dashboard — once the backend is deployed. See
+> [`DEPLOYMENT.md`](DEPLOYMENT.md); on Render it is one click, because
+> `render.yaml` is already in the repository.
+
 ```bash
 npm start
 ```

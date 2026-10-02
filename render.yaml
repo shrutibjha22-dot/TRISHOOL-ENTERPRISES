@@ -1,39 +1,44 @@
-# Render.com blueprint - deploy with one click.
+# Render.com blueprint - deploy the whole site with one click.
 #
-#   1. Push this repository to GitHub
-#   2. Go to https://render.com and sign up
-#   3. New  ->  Blueprint  ->  pick this repository
-#   4. Render reads this file, creates the database and the web service,
-#      and wires them together
-#   5. Before the first deploy it asks you to fill in ADMIN_SEED_EMAIL and
-#      ADMIN_SEED_PASSWORD. Fill both in, or the site comes up with no
-#      services and no way to sign in.
+#   1. Push this repository to GitHub   (done)
+#   2. Go to https://render.com and sign in
+#   3. New  ->  Blueprint  ->  choose TRISHOOL-ENTERPRISES
+#   4. Render reads this file and creates BOTH the web service and the
+#      MySQL database, already wired together
+#   5. Fill in the two values Render asks for:
+#        ADMIN_SEED_EMAIL      your own email address
+#        ADMIN_SEED_PASSWORD   a strong password you choose
 #
-# IMPORTANT about the free tier:
-#   - the MySQL instance is free but is DELETED after 30 days
-#   - the web service sleeps after 15 minutes of no visitors, so the first
-#     request after a quiet spell takes a few seconds
-# For something permanent you need the paid database.
+# Why this exists at all: GitHub Pages only serves static files, so it cannot
+# run this backend. Once deployed here, one address serves the website, the
+# forms that save to the database, and the admin dashboard - because
+# server/index.js serves the page and the API from the same origin. No settings
+# in the frontend need changing.
 #
-# The start command creates the tables and loads the services before the
-# server begins, because a fresh Render database has no tables in it.
+# SEE DEPLOYMENT.md for the full walkthrough and the free-tier limits.
 
 services:
   - type: web
     name: trishool-website
     runtime: node
     plan: free
+    # Nothing to compile - plain HTML, CSS and JavaScript. Just install.
     buildCommand: npm ci --omit=dev
-    # Create the tables, load the services and the admin account, then serve.
-    # db:setup and db:seed are both safe to re-run, so this is also the
-    # self-heal if the database is ever replaced.
+    # A fresh Render database has no tables in it, so create them and load the
+    # services and the admin account before the server starts serving.
+    # Both steps are safe to re-run, which also self-heals a replaced database.
     startCommand: npm run db:setup && npm run db:seed && npm start
     healthCheckPath: /api/health
+    autoDeploy: true
     envVars:
       - key: NODE_ENV
         value: production
       - key: NODE_VERSION
         value: "22"
+      # Render must listen on every interface, not just localhost.
+      - key: HOST
+        value: "0.0.0.0"
+      # --- database, filled in automatically from the instance below ---
       - key: DB_HOST
         fromDatabase:
           name: trishool-db
@@ -54,17 +59,23 @@ services:
         fromDatabase:
           name: trishool-db
           property: database
-      - key: JWT_SECRET
-        generateValue: true
+      # --- security ---
+      # The site is served over HTTPS, so the session cookie must be marked
+      # secure or the browser will refuse to send it back.
       - key: AUTH_COOKIE_SECURE
         value: "true"
-      # Required. Render will prompt for these before deploying.
+      - key: JWT_SECRET
+        generateValue: true
+      # --- the admin account. Render prompts for both. ---
       - key: ADMIN_SEED_EMAIL
         sync: false
       - key: ADMIN_SEED_PASSWORD
         sync: false
       - key: ADMIN_SEED_NAME
         value: Trishool Admin
+      # --- business details shown on the public site ---
+      - key: BUSINESS_NAME
+        value: TRISHOOL ENTERPRISES
       - key: BUSINESS_WHATSAPP
         value: "919082278478"
       - key: BUSINESS_UPI_ID
@@ -74,6 +85,9 @@ services:
 
 databases:
   - name: trishool-db
+  # FREE TIER WARNING: Render deletes a free MySQL instance after 30 days.
+  # Buy the paid plan before that, or the orders, enquiries, bookings and
+  # reviews in it are lost. See DEPLOYMENT.md.
+    plan: free
     databaseName: trishool_db
     user: trishool
-    plan: free

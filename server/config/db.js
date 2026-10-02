@@ -31,7 +31,11 @@ async function ping() {
   try {
     await conn.ping();
     const [rows] = await conn.query('SELECT VERSION() AS version, DATABASE() AS db');
-    return rows[0];
+    // The database host is included so a caller can refuse to run destructive
+    // work against a remote database. See the smoke test's cleanup step.
+    // This is DB_HOST, not the address the web server binds to, which is
+    // usually 0.0.0.0 and says nothing about where the data lives.
+    return { ...rows[0], host: config.db.host };
   } finally {
     conn.release();
   }

@@ -14,6 +14,9 @@
 
 require('dotenv').config();
 
+// Needed only by the cleanup step, so the test can remove the rows it created.
+const db = require('../config/db');
+
 const BASE = process.env.TEST_BASE || 'http://127.0.0.1:3000';
 // Both credentials come from .env. There is deliberately no fallback value:
 // the admin address is a private choice and must not be baked into source.
@@ -52,6 +55,64 @@ function check(name, condition, detail = '') {
 
 /** Summary line, coloured by outcome. */
 const colour0 = (p, f) => (f === 0 ? `${c.g}${p} passed, ${f} failed${c.x}` : `${c.r}${p} passed, ${f} failed${c.x}`);
+
+/**
+ * Delete everything this test just wrote.
+ *
+ * The checks above exercise the real write endpoints, so they leave real rows
+ * behind. Without this, running the test would fill the admin dashboard with
+ * fake "Smoke Tester" orders and make a demo look like the business is busy
+ * when it is not.
+ *
+ * Every row the test creates is identifiable by these two markers, which no
+ * real customer record would ever carry. Runs only when the test is pointed at
+ * the local database, so a deployed site is never touched.
+ */
+const TEST_MARKERS = { names: ['Smoke Tester', 'Tamper'], phone: '+919876543210' };
+
+async function cleanup() {
+  const counts = { orders: 0, inquiries: 0, bookings: 0, reviews: 0, messages: 0 };
+
+  // Refuse outright if this is not a local database.
+  let info;
+  try {
+    info = await db.ping();
+  } catch (err) {
+    return { ...counts, ok: false, error: `no database: ${err.message}` };
+  }
+  if (!/^(127\.0\.0\.1|localhost|::1)$/.test(info.host || '127.0.0.1')) {
+    return { ...counts, ok: false, error: `refusing to clean a remote database (${info.host})` };
+  }
+
+  const { names, phone } = TEST_MARKERS;
+
+  // One placeholder per name, so the parameter list matches the SQL exactly.
+  const placeholders = names.map((_, i) => `:name${i}`).join(', ');
+  const params = { phone };
+  names.forEach((n, i) => { params[`name${i}`] = n; });
+
+  // `reviews` has no phone column - it is a name-only record by design -
+  // so the phone filter is applied only where the column exists.
+  const wipe = async (table, column, hasPhone = true) => {
+    const sql = hasPhone
+      ? `DELETE FROM \`${table}\` WHERE \`${column}\` IN (${placeholders}) OR phone = :phone`
+      : `DELETE FROM \`${table}\` WHERE \`${column}\` IN (${placeholders})`;
+    const res = await db.execute(sql, params);
+    return res.affectedRows;
+  };
+
+  try {
+    counts.orders    = await wipe('orders', 'customer_name');
+    counts.inquiries = await wipe('service_inquiries', 'customer_name');
+    counts.bookings  = await wipe('bookings', 'customer_name');
+    counts.reviews   = await wipe('reviews', 'name', false);
+    counts.messages  = await wipe('contact_submissions', 'name');
+    await db.execute('DELETE FROM customers WHERE phone = :phone', { phone });
+    return { ...counts, ok: true };
+  } catch (err) {
+    return { ...counts, ok: false, error: err.message };
+  }
+}
 
 async function api(method, path, body) {
   const headers = { 'Content-Type': 'application/json' };
@@ -358,6 +419,15 @@ async function api(method, path, body) {
   console.log(`\n${c.d}-- logout --${c.x}`);
   const logout = await api('POST', '/api/auth/logout');
   check('logout succeeds', logout.status === 200 && logout.data.ok);
+
+  /* ---------------- cleanup ---------------- */
+  console.log(`\n${c.d}-- cleanup --${c.x}`);
+  const cleaned = await cleanup();
+  check('test records removed from the database',
+    cleaned.ok, cleaned.error || `orders=${cleaned.orders} inquiries=${cleaned.inquiries} bookings=${cleaned.bookings} reviews=${cleaned.reviews} messages=${cleaned.messages}`);
+  console.log(`${c.d}   removed ${cleaned.orders} order(s), ${cleaned.inquiries} inquiry(ies), `
+    + `${cleaned.bookings} booking(s), ${cleaned.reviews} review(s), ${cleaned.messages} message(s)${c.x}`);
+  console.log(`${c.d}   the dashboard is left exactly as it was before the test${c.x}`);
 
   /* ---------------- result ---------------- */
   console.log(`\n  ${'='.repeat(46)}`);

@@ -6,6 +6,11 @@ REM  Double-click this file. It starts the database if it is not
 REM  already running, then starts the Node.js server that serves
 REM  both the website and the API, then opens the browser.
 REM
+REM  Passing "nobrowser" as the first argument starts everything the
+REM  same way but does not open a browser window. That is what the
+REM  automatic start at Windows logon uses, so signing in does not
+REM  fling a tab open every time.
+REM
 REM  IMPORTANT when editing this file:
 REM    1. Never put an unescaped ) inside an echo inside an IF block.
 REM       It silently ends the block and corrupts the script.
@@ -19,6 +24,11 @@ title Trishool Enterprises - Website and Backend
 cd /d "%~dp0"
 
 setlocal enabledelayedexpansion
+
+REM  Top level on purpose - see note 2 above. %~1 cannot be tested inside
+REM  an IF block later on, so it is resolved to a plain flag right here.
+set "OPENBROWSER=1"
+if /i "%~1"=="nobrowser" set "OPENBROWSER="
 
 REM ------------------------------------------------------------
 REM  Locate Node.js.  Top level on purpose - see note 2 above.
@@ -146,6 +156,34 @@ echo.
 :envok
 
 REM ------------------------------------------------------------
+REM  4b. Is the website already running?
+REM  This file is safe to run more than once, which matters now that
+REM  Windows starts it automatically at logon. Without this check a
+REM  second run dies on "port already in use", which reads as a
+REM  failure even though the site is perfectly fine.
+REM ------------------------------------------------------------
+netstat -ano | findstr ":3000 " | findstr "LISTENING" >nul
+if not errorlevel 1 goto alreadyserving
+
+goto notserving
+
+:alreadyserving
+echo.
+echo   The website is already running.
+echo.
+if defined OPENBROWSER start "" http://127.0.0.1:3000/
+if defined OPENBROWSER echo   Opened it in your browser.
+echo   To stop it, close the other command window.
+echo.
+REM  ping, not timeout: timeout fails with "Input redirection is not
+REM  supported" whenever this runs without a console, which is exactly
+REM  when a task or a scheduled job starts it for us.
+ping -n 7 127.0.0.1 >nul
+exit /b 0
+
+:notserving
+
+REM ------------------------------------------------------------
 REM  4. Packages and tables, on a fresh copy only
 REM ------------------------------------------------------------
 if exist "node_modules" goto pkgok
@@ -166,7 +204,7 @@ REM  5. Start the website
 REM ------------------------------------------------------------
 echo   Starting the website...
 echo.
-start "" http://127.0.0.1:3000/
+if defined OPENBROWSER start "" http://127.0.0.1:3000/
 
 REM   Keeps running until this window is closed.
 node server\index.js

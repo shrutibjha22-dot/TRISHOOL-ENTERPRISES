@@ -1450,6 +1450,17 @@ document.addEventListener('DOMContentLoaded', () => {
     openAdmin();
   });
 
+  /* --- the "not running" notice --- */
+  $('#adminNoticeClose')?.addEventListener('click', closeAdminNotice);
+  $('#adminNoticeBackdrop')?.addEventListener('click', closeAdminNotice);
+  $('#adminNoticeOpen')?.addEventListener('click', () => {
+    closeAdminNotice();
+    location.href = BACKEND.adminUrl || `${SERVER_URL}/admin.html`;
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !$('#adminNotice')?.hidden) closeAdminNotice();
+  });
+
   showAdminNav();
 
   /* --- keyboard: Escape closes drawer --- */
@@ -1609,16 +1620,52 @@ async function adminHostReachable() {
 }
 
 /**
- * Tell the user what to do, instead of letting the browser show its own
- * "site can't be reached" page. That message names a port number and gives no
- * clue, which is exactly what happens when the dashboard host is switched off.
+ * Explain that the dashboard is not reachable, and what to do about it.
+ *
+ * This used to be a toast. A toast lasts 2.4 seconds here, so on anything but
+ * an instant connection the message was gone before it had been read and the
+ * Admin button simply looked broken - which is the behaviour that kept coming
+ * back. The panel stays until it is dismissed or dealt with.
+ *
+ * "Open the dashboard" always navigates, without re-testing. The reachability
+ * probe can be wrong in both directions - the browser may block the request
+ * while the server is perfectly up - so the user is never trapped behind a
+ * check they have no way to override.
  */
 function adminOfflineNotice() {
   const url = BACKEND.adminUrl || `${SERVER_URL}/admin.html`;
-  toast('The admin dashboard is not running. Start it with START-WEBSITE.bat, then click Admin again.');
-  console.warn(
-    `[admin] ${url} is not reachable. Start the server (START-WEBSITE.bat) and try again.`
-  );
+  console.warn(`[admin] ${url} is not reachable. Start the server (START-WEBSITE.bat) and try again.`);
+
+  const panel = $('#adminNotice');
+  const backdrop = $('#adminNoticeBackdrop');
+  if (!panel) {
+    // No panel on this page: fall back to the short message.
+    toast('The admin dashboard is not running. Start it with START-WEBSITE.bat, then click Admin again.');
+    return;
+  }
+
+  panel.hidden = false;
+  if (backdrop) backdrop.hidden = false;
+  document.body.classList.add('no-scroll');
+  $('#adminNoticeOpen')?.focus();
+}
+
+/** Close the notice and hand the page back to the visitor. */
+function closeAdminNotice() {
+  $('#adminNotice')?.setAttribute('hidden', '');
+  $('#adminNoticeBackdrop')?.setAttribute('hidden', '');
+  document.body.classList.remove('no-scroll');
+
+  // Return focus somewhere real. The nav link is inside a collapsed menu at
+  // narrow widths, and focusing a hidden element silently does nothing, which
+  // would strand the keyboard user on a button that no longer exists.
+  const link = $('#navAdmin');
+  const visible = link && link.offsetParent !== null;
+  if (visible) {
+    link.focus();
+  } else {
+    $('#adminNoticeOpen')?.blur();
+  }
 }
 
 async function openAdmin() {

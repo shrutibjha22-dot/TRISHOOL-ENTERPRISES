@@ -847,6 +847,47 @@ html.js .tl-item[data-reveal]:nth-child(5){ transition-delay:.32s; }
   .contact-card-form{ padding:32px 36px; }
 }
 
+/* ---------- notice shown when Admin is clicked but nothing answers ---------- */
+/* Deliberately persistent. The toast that used to do this job disappeared
+   after 2.4s, so on a slow connection the button simply looked dead. */
+.admin-notice-backdrop{
+  position:fixed; inset:0; z-index:120;
+  background:rgba(11,42,91,.45); backdrop-filter:blur(2px);
+}
+.admin-notice{
+  position:fixed; z-index:121; left:50%; top:50%; transform:translate(-50%,-50%);
+  width:min(440px,calc(100vw - 32px));
+  background:var(--white); border-radius:var(--radius-md,14px);
+  border:1px solid var(--line); box-shadow:0 24px 60px rgba(11,42,91,.28);
+  padding:26px 26px 22px;
+  max-height:calc(100vh - 48px); overflow:auto;
+}
+.admin-notice h2{
+  margin:0 0 10px; font-size:1.12rem; line-height:1.35; color:var(--navy);
+}
+.admin-notice p{
+  margin:0 0 14px; font-size:.92rem; line-height:1.6; color:var(--gray);
+}
+.admin-notice-steps{
+  margin:0 0 14px; padding:14px 16px 14px 34px;
+  background:#F8FAFC; border:1px solid var(--line); border-radius:10px;
+  font-size:.9rem; line-height:1.7; color:var(--navy);
+}
+.admin-notice-steps li + li{ margin-top:2px; }
+.admin-notice-steps code{
+  font-family:ui-monospace,Consolas,monospace; font-size:.86em;
+  background:var(--white); border:1px solid var(--line);
+  border-radius:5px; padding:1px 6px;
+}
+.admin-notice-note{
+  font-size:.84rem; line-height:1.55; color:var(--gray);
+  border-left:3px solid var(--line); padding-left:12px; margin-bottom:16px;
+}
+.admin-notice-actions{
+  display:flex; gap:10px; flex-wrap:wrap;
+}
+.admin-notice-actions .btn{ flex:1 1 auto; }
+
 /* ---------- order receipt, shown in the cart after checkout ---------- */
 .cart-receipt{
   margin-bottom:12px; padding:12px 14px;

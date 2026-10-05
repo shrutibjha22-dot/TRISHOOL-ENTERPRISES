@@ -1107,6 +1107,34 @@
 <!-- ============================ TOAST ============================ -->
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+<!-- Shown when Admin is clicked but the dashboard cannot be reached.
+     A toast was used here first and lasted 2.4 seconds, which is long
+     enough to miss entirely - the button then looked simply broken. This
+     stays up until it is dealt with. -->
+<div class="admin-notice-backdrop" id="adminNoticeBackdrop" hidden></div>
+<div class="admin-notice" id="adminNotice" role="dialog" aria-modal="true"
+     aria-labelledby="adminNoticeTitle" aria-describedby="adminNoticeBody" hidden>
+  <h2 id="adminNoticeTitle">Admin dashboard is not running</h2>
+  <p id="adminNoticeBody">
+    The dashboard reads and writes orders, enquiries, bookings and messages,
+    so it needs the site server. That server is not running right now.
+  </p>
+  <ol class="admin-notice-steps">
+    <li>Open the <strong>trishool-website</strong> folder.</li>
+    <li>Double-click <code>START-WEBSITE.bat</code> and wait for
+        &ldquo;server running&rdquo;.</li>
+    <li>Leave that window open, then press the button below.</li>
+  </ol>
+  <p class="admin-notice-note">
+    Using the published website rather than your own computer? The dashboard
+    needs the server to be hosted, which is what the Render deployment is for.
+  </p>
+  <div class="admin-notice-actions">
+    <button class="btn btn-primary" id="adminNoticeOpen" type="button">Open the dashboard</button>
+    <button class="btn btn-outline" id="adminNoticeClose" type="button">Close</button>
+  </div>
+</div>
+
 <script src="app.js"></script>
 <!-- ============================================================
      ADMIN PANEL

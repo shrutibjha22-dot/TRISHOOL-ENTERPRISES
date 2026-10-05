@@ -26,45 +26,76 @@ setting afterwards.
 
 ## Deploying to Render (free tier, about 10 minutes)
 
-### 1. Create the account
+Two services are involved: the website itself runs on Render, and the database
+runs on TiDB Cloud. Both are free and neither needs a credit card.
+
+> **Why not let Render create the database?**
+> It no longer offers MySQL. Its only databases are Postgres and Redis, so a
+> blueprint that asked Render for MySQL fails to apply instead of deploying.
+> TiDB Cloud's free Starter tier speaks the MySQL protocol, so this application
+> runs on it without a single line of code changing.
+
+### 1. Create the database on TiDB Cloud (do this first)
+
+1. Go to <https://tidbcloud.com> and sign in (GitHub or Google is quickest)
+2. Click **Create Cluster** and choose the **Starter** tier — free, 5 GiB
+3. Name it `trishool-db`, pick any region, and wait a minute for it to build
+4. On the cluster page, click **Connect**
+5. Copy these five values out of the connection dialog. They become the five
+   database fields in step 3:
+
+   | TiDB shows | Goes into |
+   |---|---|
+   | `HOST` | `DB_HOST` |
+   | `PORT` (usually `4000`) | `DB_PORT` |
+   | `USER` — include the generated prefix, e.g. `3pTAoNNegb47Uc8.root` | `DB_USER` |
+   | `PASSWORD` | `DB_PASSWORD` |
+   | `TEST` or the database name | `DB_NAME` |
+
+   Two things catch people out:
+   - the username **must** keep the prefix and the dot, and
+   - the password may be blank on some clusters, which is fine — leave it empty
+     rather than typing something.
+
+### 2. Create the Render account
 
 1. Go to <https://render.com>
 2. Click **Get Started**
 3. Sign up with your email, or click **Continue with GitHub** and approve the
    app it asks for
 
-### 2. Create the blueprint
+### 3. Create the blueprint
 
 1. In the dashboard click **New** → **Blueprint**
 2. Connect and choose `TRISHOOL-ENTERPRISES`
 3. Render reads `render.yaml` from the repository and shows a plan:
    - a web service called `trishool-website`
-   - a MySQL database called `trishool-db`
-4. Render will ask for the two values it cannot know:
+4. Render asks for the seven values it cannot know — the five from step 1, plus:
 
    | Field | What to enter |
    |---|---|
    | `ADMIN_SEED_EMAIL` | your own email address |
    | `ADMIN_SEED_PASSWORD` | a strong password you choose |
 
-   These create the admin account. If you leave them blank the site comes up
-   with no admin and you cannot sign in.
+   The admin pair creates the login for the dashboard. If you leave those blank
+   the site comes up with no admin and you cannot sign in.
 
 5. Click **Apply** / **Create**
 
-### 3. Wait for the first deploy
+### 4. Wait for the first deploy
 
 The build log shows each step. The start command runs the database setup and
 seed before serving, so you should see:
 
 ```
+[db] connected to trishool_db (TiDB)
 [db] schema ready in `trishool_db`
 [seed] 10 services ready
 [seed] admin account ready
   Website   https://trishool-website.onrender.com/
 ```
 
-### 4. Open your site
+### 5. Open your site
 
 ```
 https://trishool-website.onrender.com/
@@ -107,12 +138,14 @@ Be aware of these before you rely on it:
 
 | Limitation | Effect |
 |---|---|
-| MySQL free database is **deleted after 30 days** | After a month you need the paid database, or your orders, enquiries and reviews are lost |
 | Web service **sleeps after 15 minutes** idle | The first visitor after a quiet spell waits a few seconds |
+| Database has a **monthly quota** | TiDB Cloud Starter includes 50 million request units. Far more than a small business site uses; if it is ever reached, the cluster refuses new connections until the quota resets or you raise it |
 | No custom domain | The address ends in `.onrender.com` |
 
-For a college project or a trial, 30 days is plenty. For a real business, buy
-the paid database so the data survives.
+The database itself is **not** deleted on a timer, which is the important
+difference from the old setup. Nothing here is lost after a fixed number of
+days — the data stays as long as the free cluster does. Export it from TiDB
+Cloud if it ever matters to you.
 
 ---
 
@@ -186,4 +219,6 @@ database password is almost always the cause.
 | Admin says "not running" | The backend is not deployed, or not running on your machine |
 | Login always rejected | `ADMIN_SEED_EMAIL` / `ADMIN_SEED_PASSWORD` in Render differ from what you are typing |
 | Site loads but no images | Something is missing from the repository. Check `/assets/logo-mark.png` returns 200 |
-| Data vanished after 30 days | That is the free Render database expiring. Buy the paid one |
+| `ER_ACCESS_DENIED_ERROR` in the log | The TiDB username lost its prefix. It must be the whole value, e.g. `3pTAoNNegb47Uc8.root`, not just `root` |
+| `ER_SECURE_TRANSPORT_REQUIRED` | `DB_SSL` is off. It must be `true` on Render — the hosted database refuses plain-text connections |
+| Sign-in succeeds then every call fails | `PUBLIC_ORIGIN` does not match the address the site is served from, so the session cookie is not being sent back |

@@ -22,7 +22,11 @@ const pool = mysql.createPool({
   // because no monetary value is large enough to lose precision.
   decimalNumbers: true,
   dateStrings: ['DATE', 'DATETIME'],
-  namedPlaceholders: true
+  namedPlaceholders: true,
+  // Only set when DB_SSL is on. Managed MySQL-compatible hosts such as TiDB
+  // Cloud refuse plain-text connections, so this is what lets the same code
+  // run unchanged against the local MariaDB and a hosted database.
+  ...(config.db.ssl ? { ssl: config.db.ssl } : {})
 });
 
 /** Verify the server answers and the database exists. */

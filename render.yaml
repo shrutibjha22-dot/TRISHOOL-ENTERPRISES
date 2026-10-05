@@ -38,27 +38,32 @@ services:
       # Render must listen on every interface, not just localhost.
       - key: HOST
         value: "0.0.0.0"
-      # --- database, filled in automatically from the instance below ---
+      # --- database ---
+      # These are prompted for, not created here. Render used to offer a
+      # free MySQL instance, but it no longer does: its only databases are
+      # Postgres and Redis. A blueprint that asked it for MySQL would fail to
+      # apply, so the database is created separately and these five values are
+      # pasted in.
+      #
+      # TiDB Cloud's free Starter tier is the recommended host: it speaks the
+      # MySQL protocol, so this application runs on it unchanged, needs no
+      # credit card, and comes with 5 GiB. See DEPLOYMENT.md for the exact
+      # steps and which value goes where.
       - key: DB_HOST
-        fromDatabase:
-          name: trishool-db
-          property: host
+        sync: false
       - key: DB_PORT
-        fromDatabase:
-          name: trishool-db
-          property: port
+        sync: false
       - key: DB_USER
-        fromDatabase:
-          name: trishool-db
-          property: user
+        sync: false
       - key: DB_PASSWORD
-        fromDatabase:
-          name: trishool-db
-          property: password
+        sync: false
       - key: DB_NAME
-        fromDatabase:
-          name: trishool-db
-          property: database
+        sync: false
+      # Hosted MySQL-compatible databases require an encrypted connection.
+      # The local MariaDB has no certificate, which is why this is off by
+      # default in .env and only switched on here.
+      - key: DB_SSL
+        value: "true"
       # --- security ---
       # The site is served over HTTPS, so the session cookie must be marked
       # secure or the browser will refuse to send it back.
@@ -107,11 +112,10 @@ services:
       - key: GST_RATE
         value: "18"
 
-databases:
-  - name: trishool-db
-  # FREE TIER WARNING: Render deletes a free MySQL instance after 30 days.
-  # Buy the paid plan before that, or the orders, enquiries, bookings and
-  # reviews in it are lost. See DEPLOYMENT.md.
-    plan: free
-    databaseName: trishool_db
-    user: trishool
+# There is deliberately no `databases:` section.
+#
+# Render does not offer MySQL any more - only Postgres and Redis - so asking it
+# to create one would make this blueprint fail to apply rather than deploy. The
+# database lives on TiDB Cloud's free Starter tier, which speaks the MySQL
+# protocol, and its details are entered when the blueprint prompts for them.
+# See DEPLOYMENT.md.

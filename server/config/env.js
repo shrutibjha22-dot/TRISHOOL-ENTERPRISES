@@ -58,7 +58,23 @@ const config = {
     user: process.env.DB_USER || 'root',
     password: process.env.DB_PASSWORD || '',
     database: process.env.DB_NAME || 'trishool_db',
-    connectionLimit: num(process.env.DB_POOL_SIZE, 10)
+    connectionLimit: num(process.env.DB_POOL_SIZE, 10),
+
+    /**
+     * TLS to the database, enabled with DB_SSL=true.
+     *
+     * The local MariaDB has no certificate, so this stays off by default.
+     * Hosted MySQL-compatible databases - TiDB Cloud in particular - refuse
+     * plain-text connections outright, so a deployment without this cannot
+     * connect at all.
+     *
+     * rejectUnauthorized is left on: it verifies the server is who it claims
+     * to be, which is the whole point of encrypting. The hosted provider's
+     * certificate is issued for a real domain, so this succeeds there.
+     */
+    ssl: bool(process.env.DB_SSL, false)
+      ? { minVersion: 'TLSv1.2', rejectUnauthorized: true }
+      : null
   },
 
   auth: {

@@ -29,10 +29,58 @@
  */
 const BACKEND = {
   apiBase: '',
-  adminUrl: 'http://127.0.0.1:3000/admin.html'
+  adminUrl: 'http://127.0.0.1:3000/admin.html',
+
+  /**
+   * Origins to try, in order, when this page is not itself served by the API -
+   * which is the case on a static host such as GitHub Pages.
+   *
+   * Kept in step with the list in app.js. Because the dashboard asks which host
+   * answers instead of trusting the address it was built with, opening the
+   * published admin.html on any phone or laptop lands on the real dashboard
+   * with no rebuilding once the backend is online.
+   */
+  candidates: [
+    '',                                    // same origin (Render, or local)
+    'https://trishool-website.onrender.com'
+  ]
 };
 
 const api = (path) => BACKEND.apiBase + '/api' + path;
+
+/**
+ * Find the API and remember where it is.
+ *
+ * Probes each candidate once and keeps the first that answers, cached as a
+ * promise so the sign-in check and this never probe twice.
+ */
+let backendPromise = null;
+
+function resolveBackend() {
+  if (backendPromise) return backendPromise;
+
+  backendPromise = (async () => {
+    for (const candidate of BACKEND.candidates) {
+      try {
+        const res = await fetch(candidate + '/api/health', { cache: 'no-store' });
+        if (!res.ok) continue;
+        const data = await res.json();
+        if (!data || !data.ok) continue;
+
+        BACKEND.apiBase = candidate;
+        BACKEND.adminUrl = candidate
+          ? candidate + '/admin.html'
+          : new URL('admin.html', location.href).href;
+        return BACKEND;
+      } catch {
+        // Not answering; try the next one.
+      }
+    }
+    return BACKEND;
+  })();
+
+  return backendPromise;
+}
 
 /**
  * Send the browser to the real dashboard if this page cannot reach an API.
@@ -45,6 +93,8 @@ const api = (path) => BACKEND.apiBase + '/api' + path;
  */
 async function redirectIfNoApi() {
   if (location.protocol === 'file:') return;
+
+  await resolveBackend();
 
   let ok = false;
   try {

@@ -73,6 +73,32 @@ https://trishool-website.onrender.com/
 Admin is the **Admin** link in the navigation bar, or
 `https://trishool-website.onrender.com/admin.html`.
 
+#### Signing in to the admin dashboard from any device
+
+Once the service is deployed this works from a phone, a tablet or any other
+computer, not just the machine you deployed from. Sign in at
+`https://trishool-website.onrender.com/admin.html` with the email and password
+you entered for `ADMIN_SEED_EMAIL` and `ADMIN_SEED_PASSWORD`.
+
+The **published GitHub Pages address works too** — its Admin link finds the live
+API on its own, because the page asks which host answers rather than trusting
+the address it was built with. Nothing needs rebuilding when the backend moves.
+
+Two settings make that work, and both are set for you in `render.yaml`:
+
+| Setting | Why it is needed |
+|---|---|
+| `PUBLIC_ORIGIN` | The published site and the API are on different addresses, so the browser blocks the responses unless the API allows that address. |
+| `TRUST_PROXY` | Render forwards every request through its own proxy. Without this the rate limiter counts every visitor as the same IP, and 60 form submissions an hour site-wide would lock everybody out at once. |
+
+The session cookie is `SameSite=Lax` when the page and API share an address,
+and automatically becomes `SameSite=None` when `PUBLIC_ORIGIN` is set, because
+a lax cookie is never sent cross-site — which would let you sign in and then be
+refused on every following request.
+
+If you ever publish the site at a different address, change `PUBLIC_ORIGIN` to
+match it.
+
 ---
 
 ## What the free tier costs you

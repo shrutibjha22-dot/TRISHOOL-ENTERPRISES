@@ -84,8 +84,72 @@ const BACKEND = {
   apiBase: '',
 
   // Where the admin dashboard lives when it cannot run on this page.
-  adminUrl: 'http://127.0.0.1:3000/admin.html'
+  // Filled in by resolveBackend(); this is only the last-resort fallback for
+  // a developer working on their own machine.
+  adminUrl: 'http://127.0.0.1:3000/admin.html',
+
+  /**
+   * Origins to try, in order, when the page is not itself served by the API -
+   * which is the case for the published site on GitHub Pages.
+   *
+   * This is what makes the admin dashboard work from any device without
+   * rebuilding this page. Once the backend is online, the published site finds
+   * it by asking, instead of pointing at whatever address it was written
+   * against. Adding a host to this list is the only change ever needed when
+   * the backend moves.
+   */
+  candidates: [
+    '',                                    // same origin (Render, or local)
+    'https://trishool-website.onrender.com'
+  ]
 };
+
+/**
+ * Find the API and remember where it is.
+ *
+ * Probes each candidate once and keeps the first that answers /api/health, so
+ * a static host that cannot serve the API hands over to the real one
+ * automatically. Resolved once per page: the result is cached as a promise, so
+ * concurrent callers share a single round of probes rather than each starting
+ * their own.
+ *
+ * Deliberately not awaited by the page as it loads. It starts straight away in
+ * the background so the values are usually settled before anyone clicks
+ * anything, but nothing waits on it - a slow or unreachable host must never
+ * hold up the rest of the page.
+ */
+let backendPromise = null;
+
+function resolveBackend() {
+  if (backendPromise) return backendPromise;
+
+  backendPromise = (async () => {
+    for (const candidate of BACKEND.candidates) {
+      const base = candidate;
+      try {
+        const res = await fetch(base + '/api/health', { cache: 'no-store' });
+        if (!res.ok) continue;
+        const data = await res.json();
+        if (!data || !data.ok) continue;
+
+        // Same origin needs no base at all, which keeps cookies first-party.
+        BACKEND.apiBase = base;
+        BACKEND.adminUrl = base
+          ? base + '/admin.html'
+          : new URL('admin.html', location.href).href;
+        return BACKEND;
+      } catch {
+        // This candidate is not answering; try the next one.
+      }
+    }
+
+    // Nothing answered. Keep the local fallback so a developer who is running
+    // the server by hand still has somewhere sensible to be sent.
+    return BACKEND;
+  })();
+
+  return backendPromise;
+}
 
 /** Build an API URL. */
 const api = (path) => BACKEND.apiBase + '/api' + path;
@@ -101,7 +165,11 @@ const backendOn = () => true;
  * admin panel genuinely cannot work on this page.
  */
 let apiCheck = null;
-function apiAvailable() {
+async function apiAvailable() {
+  // Let the discovery finish first, otherwise this would test whichever
+  // candidate happened to be configured and miss a backend that is up.
+  await resolveBackend();
+
   if (apiCheck === null) {
     apiCheck = fetch(api('/health'), { cache: 'no-store' })
       .then((r) => r.json())
@@ -1362,6 +1430,10 @@ function initCounters() {
 document.documentElement.classList.add('js');
 
 document.addEventListener('DOMContentLoaded', () => {
+  /* Find the API in the background so the forms and the Admin link know where
+     it is without making the visitor wait for it. */
+  resolveBackend();
+
   /* catalog */
   renderHeroRates();
   renderServices();

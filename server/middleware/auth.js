@@ -30,7 +30,8 @@ const signToken = (admin) =>
 function setAuthCookie(res, token) {
   res.cookie(config.auth.cookieName, token, {
     httpOnly: true,                 // not readable from JavaScript
-    sameSite: 'lax',                // blocks cross-site submission
+    sameSite: config.auth.cookieSameSite, // 'lax' same-origin, 'none' when the
+                                           // frontend is hosted separately
     secure: config.auth.cookieSecure, // set true when served over https
     maxAge: 8 * 60 * 60 * 1000
   });

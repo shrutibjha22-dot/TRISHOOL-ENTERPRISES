@@ -67,7 +67,22 @@ const config = {
     jwtExpiresIn: process.env.JWT_EXPIRES_IN || '8h',
     bcryptRounds: num(process.env.BCRYPT_ROUNDS, 12),
     cookieName: process.env.AUTH_COOKIE_NAME || 'trishool_admin_token',
-    cookieSecure: bool(process.env.AUTH_COOKIE_SECURE, false)
+    cookieSecure: bool(process.env.AUTH_COOKIE_SECURE, false),
+
+    /**
+     * SameSite for the session cookie.
+     *
+     * 'lax' is the safer default and is right whenever the page and the API
+     * share an origin. But the moment a separately hosted frontend is allowed
+     * (PUBLIC_ORIGIN set), every admin request is cross-site, and a lax cookie
+     * is not sent on those at all - so signing in would appear to work and
+     * then every call would come back unauthorised.
+     *
+     * 'none' is the only value that works there, and browsers require it to be
+     * paired with Secure, which cookieSecure enforces in production.
+     */
+    cookieSameSite: process.env.AUTH_COOKIE_SAMESITE
+      || (process.env.PUBLIC_ORIGIN ? 'none' : 'lax')
   },
 
   // Business details, kept server-side so they drive the API responses

@@ -77,6 +77,19 @@ services:
       # address and bypass the limiter.
       - key: TRUST_PROXY
         value: "1"
+      # The published website runs on GitHub Pages while the API runs here,
+      # so every call it makes is cross-origin. Without this the browser
+      # blocks the responses and no form and no admin sign-in can work from
+      # that address - the same-origin Render URL would still be fine, which
+      # makes it easy to miss.
+      #
+      # This is also what turns the session cookie from SameSite=Lax to
+      # SameSite=None, without which a cross-origin sign-in would succeed and
+      # then be refused on every following request.
+      #
+      # Change this if the site is ever published somewhere else.
+      - key: PUBLIC_ORIGIN
+        value: "https://shrutibjha22-dot.github.io"
       # --- the admin account. Render prompts for both. ---
       - key: ADMIN_SEED_EMAIL
         sync: false

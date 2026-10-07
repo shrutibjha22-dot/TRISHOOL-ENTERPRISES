@@ -1,5 +1,5 @@
-﻿/* ============================================================
-   TRISHOOL ENTERPRISES â€” app.js
+/* ============================================================
+   TRISHOOL ENTERPRISES — app.js
    Catalog + cart + WhatsApp / UPI wiring
    ============================================================ */
 
@@ -13,7 +13,7 @@ const BUSINESS = {
   whatsapp: '919082278478',
   upiId:    '9324534405@ptaxis',
   upiName:  'TRISHOOL ENTERPRISES',
-  currency: 'â‚¹',
+  currency: '₹',
 
   // Shown in the contact card, the footer and every WhatsApp order message.
   address: {
@@ -26,7 +26,7 @@ const BUSINESS = {
   },
 
   hours: {
-    weekdays: '10:00 AM â€“ 8:00 PM',
+    weekdays: '10:00 AM – 8:00 PM',
     sunday:   'By appointment'
   },
 
@@ -55,41 +55,34 @@ const BUSINESS = {
    --------------------------------------------------------- */
 /* ---------------------------------------------------------
    WHERE THE BACKEND LIVES
+   ---------------------------------------------------------
+   This page has no admin section, so it needs one thing from the
+   backend: the address to save forms to.
 
-   There are three ways this site can be run, and the two settings
-   below are what let one build work in all of them.
+   Two ways the site gets served:
 
-   1. Everything on one machine (START-WEBSITE.bat, or a Render
-      deployment). The page and the API share an origin, so both
-      settings stay blank. This is the default.
+   1. The page and the API share an origin - a Render deployment, or
+      START-WEBSITE.bat on this computer. apiBase stays blank, so every
+      call goes to the host that served the page. This is the default.
 
-   2. Static page on GitHub Pages, API on a real host
-      (Render, Railway, a VPS). Put that host in BOTH settings,
-      for example:
-
-          apiBase:  'https://trishool-website.onrender.com',
-          adminUrl: 'https://trishool-website.onrender.com/admin.html'
-
-      Forms then save to the database and the admin dashboard works
-      from anywhere in the world.
-
-   3. Static page on GitHub Pages with no API deployed yet.
-      Leave apiBase blank and set adminUrl to wherever you do run the
-      server - by default your own machine. Clicking Admin then takes
-      the browser to the working dashboard instead of showing an error
-      page that cannot do anything.
+   2. The page is static on GitHub Pages and the API is hosted
+      elsewhere. resolveBackend() finds that host by asking which one
+      answers /api/health, so nothing is filled in by hand and nothing
+      has to be rebuilt when the backend moves. Add the host to the
+      candidates list below if it is not already there.
    --------------------------------------------------------- */
 const BACKEND = {
   // '' means "the same host that served this page".
   apiBase: '',
 
+
   /**
    * Origins to try, in order, when the page is not itself served by the API -
    * which is the case for the published site on GitHub Pages.
    *
-   * This is what lets the forms save to the database from the published
-   * address without a rebuild. Once the backend is online, the published site
-   * finds it by asking, instead of pointing at whatever address it was written
+   * This is what makes the admin dashboard work from any device without
+   * rebuilding this page. Once the backend is online, the published site finds
+   * it by asking, instead of pointing at whatever address it was written
    * against. Adding a host to this list is the only change ever needed when
    * the backend moves.
    */
@@ -136,8 +129,7 @@ function resolveBackend() {
     }
 
     // Nothing answered. Leave apiBase blank so the forms keep addressing this
-    // same origin and report plainly that the server cannot be reached, rather
-    // than silently aiming at somewhere that does not exist.
+    // same origin and report plainly that the server cannot be reached.
     return BACKEND;
   })();
 
@@ -159,7 +151,7 @@ let SERVICES = [
   {
     id: 'printer-repair',
     title: 'Printer Repair',
-    icon: 'ðŸ–¨ï¸',
+    icon: '🖨️',
     price: 300,
     bento: 'lead',            // 2 x 2 in the bento grid
     badge: 'Most booked',
@@ -169,21 +161,21 @@ let SERVICES = [
   {
     id: 'computer-repair',
     title: 'Computer Repair',
-    icon: 'ðŸ’»',
+    icon: '💻',
     price: 500,
     desc: 'No power, no display, frequent hangs, viruses and slow performance. Desktop or laptop.'
   },
   {
     id: 'cartridge-refill',
     title: 'Cartridge Refill',
-    icon: 'ðŸ–‹ï¸',
+    icon: '🖋️',
     price: 250,
     desc: 'Genuine-toner refill with print-head cleaning, restoring sharp original print quality.'
   },
   {
     id: 'quick-service',
     title: 'Quick Service',
-    icon: 'âš¡',
+    icon: '⚡',
     price: 250,
     bento: 'wide',            // full width, short
     desc: 'Express check-up and minor fixes while you wait, or a priority on-site visit slot.'
@@ -194,7 +186,7 @@ let AMC_PLANS = [
   {
     id: 'amc-computer',
     title: 'Computer AMC',
-    icon: 'ðŸ’»',
+    icon: '💻',
     price: 2500,
     period: 'per year',
     sub: 'Annual Maintenance Contract for desktops & laptops',
@@ -211,7 +203,7 @@ let AMC_PLANS = [
   {
     id: 'amc-printer',
     title: 'Printer AMC',
-    icon: 'ðŸ–¨ï¸',
+    icon: '🖨️',
     price: 1500,
     period: 'per year',
     sub: 'Annual Maintenance Contract for printers & MFPs',
@@ -231,28 +223,28 @@ let BUY_SELL = [
   {
     id: 'buy-desktop',
     title: 'Refurbished Desktops',
-    icon: 'ðŸ–¥ï¸',
+    icon: '🖥️',
     price: null,
     desc: 'Tested, graded and ready-to-use office and gaming desktops. Bulk supply available.'
   },
   {
     id: 'buy-printer',
     title: 'Printers & MFPs',
-    icon: 'ðŸ–¨ï¸',
+    icon: '🖨️',
     price: null,
     desc: 'New and refurbished inkjet, laser and multifunction printers from all major brands.'
   },
   {
     id: 'buy-laptop',
     title: 'Laptops',
-    icon: 'ðŸ’¼',
+    icon: '💼',
     price: null,
     desc: 'Business and student laptops, new and certified refurbished. We also buy yours.'
   },
   {
     id: 'buy-consumables',
     title: 'Consumables & Parts',
-    icon: 'ðŸ“¦',
+    icon: '📦',
     price: null,
     desc: 'Toner, ink, cartridges, ribbons, drums and spare parts for all major brands.'
   }
@@ -640,10 +632,17 @@ function renderCart() {
   const t = cartTotals();
   const grand = t.subtotal + t.gst;
 
-  $('#cartSubtotal').textContent = money(t.subtotal);
-  $('#cartGst').textContent = BUSINESS.gst.inclusive ? 'Included' : money(t.gst);
-  $('#cartGstLabel').textContent = gstLabel();
-  $('#cartTotal').textContent = money(grand);
+  /* When everything in the cart is priced "on request" there is no amount to
+     add up, and printing a rupee total of zero reads as though the work is
+     free - which is the opposite of the truth. Say what it actually is. A cart
+     that also holds something priced still shows its real total, because that
+     part genuinely is payable. */
+  const quoteOnly = hasItems && t.subtotal === 0;
+
+  $('#cartSubtotal').textContent = quoteOnly ? 'Quote on WhatsApp' : money(t.subtotal);
+  $('#cartGst').textContent = BUSINESS.gst.inclusive ? 'Included' : (quoteOnly ? '—' : money(t.gst));
+  $('#cartGstLabel').textContent = quoteOnly ? 'GST' : gstLabel();
+  $('#cartTotal').textContent = quoteOnly ? 'Quote on WhatsApp' : money(grand);
   $('#cartEnquiryNote').hidden = !t.hasEnquiry;
 
   /* a GST-registered business must show its GSTIN on the bill */
@@ -655,16 +654,20 @@ function renderCart() {
     }
   }
 
-  /* UPI panel â€” the customer pays the GST-inclusive amount */
+  /* UPI panel — the customer pays the GST-inclusive amount.
+     Nothing to pay when the whole cart is a quote, so the panel is hidden
+     rather than offering a payment link for zero rupees. */
   const method = $('input[name="payMethod"]:checked')?.value || 'Cash';
-  $('#cartUpi').hidden = method !== 'UPI';
+  $('#cartUpi').hidden = method !== 'UPI' || quoteOnly;
   $('#cartPayLink').href = upiLink(grand);
   $('#payLink').href = upiLink(0);
 
   /* checkout button label */
-  $('#cartCheckout').textContent = hasItems
-    ? `Send order on WhatsApp Â· ${money(grand)}`
-    : 'Send order on WhatsApp';
+  $('#cartCheckout').textContent = !hasItems
+    ? 'Send order on WhatsApp'
+    : quoteOnly
+      ? 'Send enquiry on WhatsApp'
+      : `Send order on WhatsApp · ${money(grand)}`;
 
   /* Any change to the cart invalidates the last receipt: the reference shown
      belongs to an order that no longer matches what is in the drawer. Hiding
@@ -802,7 +805,7 @@ function dayLabel(value) {
 }
 
 function reviewCard(r) {
-  const stars = 'â˜…'.repeat(r.rating) + 'â˜†'.repeat(5 - r.rating);
+  const stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
   const meta = [esc(r.service), esc(dayLabel(r.date))].filter(Boolean).join(' &middot; ');
   return `
     <figure class="quote">
@@ -906,7 +909,7 @@ async function submitReview(event) {
     btn.disabled = false;
     reviewFeedback(
       false,
-      'Reviews cannot be posted on the website yet. Please send it on WhatsApp instead â€” we will add it for you.'
+      'Reviews cannot be posted on the website yet. Please send it on WhatsApp instead — we will add it for you.'
     );
     $('#rvWhatsApp')?.removeAttribute('hidden');
     return;
@@ -938,7 +941,7 @@ async function submitReview(event) {
     // what they wrote.
     reviewFeedback(
       false,
-      'We could not post that just now. Please send it on WhatsApp instead â€” we will add it for you.'
+      'We could not post that just now. Please send it on WhatsApp instead — we will add it for you.'
     );
     const wa = $('#rvWhatsApp');
     if (wa) {
@@ -1101,7 +1104,7 @@ function checkout() {
   if (checkingOut) return;
 
   if (cart.length === 0) {
-    toast('Your cart is empty â€” add a service first');
+    toast('Your cart is empty — add a service first');
     return;
   }
 
@@ -1129,7 +1132,7 @@ function checkout() {
     checkingOut = false;
     btn.disabled = false;
     window.open(waLink(buildOrderMessage(customer, newOrderRef())), '_blank', 'noopener');
-    toast('Opening WhatsApp with your orderâ€¦');
+    toast('Opening WhatsApp with your order…');
     return;
   }
 
@@ -1143,7 +1146,7 @@ function checkout() {
   // and the receipt warns them we do not have the order yet.
   const record = buildOrderRecord(customer, newOrderRef(), method);
 
-  btn.textContent = 'Saving your orderâ€¦';
+  btn.textContent = 'Saving your order…';
 
   saveOrder(record)
     .catch(() => null)
@@ -1166,7 +1169,7 @@ function finishCheckout(customer, method, localRef, saved) {
   const message = buildOrderMessage(customer, ref);
 
   window.open(waLink(message), '_blank', 'noopener');
-  toast(saved ? 'Order saved â€” opening WhatsAppâ€¦' : 'Opening WhatsApp with your orderâ€¦');
+  toast(saved ? 'Order saved — opening WhatsApp…' : 'Opening WhatsApp with your order…');
 
   showOrderReceipt(saved ? ref : null);
 }
@@ -1256,7 +1259,7 @@ function toast(msg) {
 }
 
 /* ---------------------------------------------------------
-   JOURNEY â€” language switch
+   JOURNEY — language switch
    --------------------------------------------------------- */
 const LANG_KEY = 'trishool_lang_v1';
 
@@ -1483,6 +1486,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+
   /* --- keyboard: Escape closes drawer --- */
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && $('#cartDrawer').classList.contains('open')) closeCart();
@@ -1578,7 +1582,7 @@ function fillServiceSelect(select, { includeBlank, blankLabel } = {}) {
   let html = includeBlank ? `<option value="">${blankLabel}</option>` : '';
   html += priced
     .map((s) => `<option value="${esc(s.id)}">${esc(s.title)}${
-      s.price === null ? '' : ` â€” ${money(s.price)}`}</option>`)
+      s.price === null ? '' : ` — ${money(s.price)}`}</option>`)
     .join('');
   html += '<option value="product">Buying or selling equipment</option>';
   select.innerHTML = html;
@@ -1822,7 +1826,7 @@ function initPwa() {
       bar.remove();
       deferred.prompt();
       const choice = await deferred.userChoice;
-      if (choice.outcome === 'accepted') toast('Installing the appâ€¦');
+      if (choice.outcome === 'accepted') toast('Installing the app…');
       deferred = null;
     });
 

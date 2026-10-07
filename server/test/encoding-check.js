@@ -52,10 +52,19 @@ const NAMED = [
 ];
 
 let bad = 0;
+let checked = 0;
 
 for (const f of files) {
   const full = path.join(dir, f);
-  if (!fs.existsSync(full)) continue;
+  if (!fs.existsSync(full)) {
+    // Reported, not skipped. An earlier version skipped silently, so pointing
+    // it at a folder that held none of these files printed "PASS" having
+    // checked nothing at all - which is worse than no check.
+    bad++;
+    console.log(`  MISSING  ${f}  (not found in ${dir})`);
+    continue;
+  }
+  checked++;
 
   const text = fs.readFileSync(full, 'utf8');
 
@@ -81,5 +90,7 @@ for (const f of files) {
   }
 }
 
-console.log(`\n  ${bad === 0 ? 'PASS - no encoding damage' : 'FAIL - ' + bad + ' file(s) damaged'}\n`);
-process.exit(bad === 0 ? 0 : 1);
+console.log(`\n  ${bad === 0 ? `PASS - no encoding damage in ${checked} file(s)` : 'FAIL - ' + bad + ' file(s) need attention'}`);
+if (checked === 0) console.log('  WARNING  nothing was actually checked');
+console.log('');
+process.exit(bad === 0 && checked > 0 ? 0 : 1);

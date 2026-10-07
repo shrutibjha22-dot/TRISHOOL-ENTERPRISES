@@ -53,6 +53,24 @@ function check(name, condition, detail = '') {
   }
 }
 
+/**
+ * A date `days` from now, as YYYY-MM-DD.
+ *
+ * Bookings in the past are rejected by the API, so every date used here has to
+ * be computed rather than written down. A hardcoded date quietly rots: this
+ * file once said 2026-10-05, and a couple of days later the booking checks
+ * failed for no reason anyone could see. Anything that depends on "now" is
+ * calculated from the clock instead.
+ */
+function futureDate(days) {
+  const d = new Date();
+  d.setDate(d.getDate() + days);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
+/** Today, as YYYY-MM-DD. */
+const todayIso = () => futureDate(0);
+
 /** Summary line, coloured by outcome. */
 const colour0 = (p, f) => (f === 0 ? `${c.g}${p} passed, ${f} failed${c.x}` : `${c.r}${p} passed, ${f} failed${c.x}`);
 
@@ -176,7 +194,7 @@ async function api(method, path, body) {
   const bkg = await api('POST', '/api/bookings', {
     name: 'Smoke Tester', phone: '9876543210', service: 'computer-repair',
     address: 'Steel Chamber Tower, C Wing 527, Kalamboli',
-    preferredDate: '2026-10-05', message: 'Laptop will not boot.'
+    preferredDate: futureDate(7), message: 'Laptop will not boot.'
   });
   check('booking created', bkg.status === 201 && bkg.data.ok);
   check('booking reference generated', /^TRH-BKG-[A-Z2-9]{4}$/.test(bkg.data?.booking?.ref || ''),
@@ -199,11 +217,9 @@ async function api(method, path, body) {
   check('booking rejects a malformed date', malformed.status === 400,
     `status=${malformed.status}`);
 
-  const today = new Date();
-  const isoToday = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
   const sameDay = await api('POST', '/api/bookings', {
     name: 'Smoke Tester', phone: '9876543210',
-    preferredDate: isoToday, message: 'A same-day visit, which must be allowed.'
+    preferredDate: todayIso(), message: 'A same-day visit, which must be allowed.'
   });
   check('booking allows today', sameDay.status === 201, `status=${sameDay.status}`);
 

@@ -11,6 +11,9 @@ REM  same way but does not open a browser window. That is what the
 REM  automatic start at Windows logon uses, so signing in does not
 REM  fling a tab open every time.
 REM
+REM  Passing "admin" opens the staff dashboard instead of the public
+REM  site. ADMIN-ONLY.bat is a shortcut for that.
+REM
 REM  IMPORTANT when editing this file:
 REM    1. Never put an unescaped ) inside an echo inside an IF block.
 REM       It silently ends the block and corrupts the script.
@@ -28,7 +31,9 @@ setlocal enabledelayedexpansion
 REM  Top level on purpose - see note 2 above. %~1 cannot be tested inside
 REM  an IF block later on, so it is resolved to a plain flag right here.
 set "OPENBROWSER=1"
+set "OPENPAGE="
 if /i "%~1"=="nobrowser" set "OPENBROWSER="
+if /i "%~1"=="admin" set "OPENPAGE=admin.html"
 
 REM ------------------------------------------------------------
 REM  Locate Node.js.  Top level on purpose - see note 2 above.
@@ -171,7 +176,7 @@ goto notserving
 echo.
 echo   The website is already running.
 echo.
-if defined OPENBROWSER start "" http://127.0.0.1:3000/
+if defined OPENBROWSER start "" "http://127.0.0.1:3000/%OPENPAGE%"
 if defined OPENBROWSER echo   Opened it in your browser.
 echo   To stop it, close the other command window.
 echo.
@@ -204,7 +209,7 @@ REM  5. Start the website
 REM ------------------------------------------------------------
 echo   Starting the website...
 echo.
-if defined OPENBROWSER start "" http://127.0.0.1:3000/
+if defined OPENBROWSER start "" "http://127.0.0.1:3000/%OPENPAGE%"
 
 REM   Keeps running until this window is closed.
 node server\index.js

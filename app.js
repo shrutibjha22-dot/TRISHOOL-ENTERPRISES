@@ -1,5 +1,5 @@
-/* ============================================================
-   TRISHOOL ENTERPRISES — app.js
+﻿/* ============================================================
+   TRISHOOL ENTERPRISES â€” app.js
    Catalog + cart + WhatsApp / UPI wiring
    ============================================================ */
 
@@ -13,7 +13,7 @@ const BUSINESS = {
   whatsapp: '919082278478',
   upiId:    '9324534405@ptaxis',
   upiName:  'TRISHOOL ENTERPRISES',
-  currency: '₹',
+  currency: 'â‚¹',
 
   // Shown in the contact card, the footer and every WhatsApp order message.
   address: {
@@ -26,7 +26,7 @@ const BUSINESS = {
   },
 
   hours: {
-    weekdays: '10:00 AM – 8:00 PM',
+    weekdays: '10:00 AM â€“ 8:00 PM',
     sunday:   'By appointment'
   },
 
@@ -83,18 +83,13 @@ const BACKEND = {
   // '' means "the same host that served this page".
   apiBase: '',
 
-  // Where the admin dashboard lives when it cannot run on this page.
-  // Filled in by resolveBackend(); this is only the last-resort fallback for
-  // a developer working on their own machine.
-  adminUrl: 'http://127.0.0.1:3000/admin.html',
-
   /**
    * Origins to try, in order, when the page is not itself served by the API -
    * which is the case for the published site on GitHub Pages.
    *
-   * This is what makes the admin dashboard work from any device without
-   * rebuilding this page. Once the backend is online, the published site finds
-   * it by asking, instead of pointing at whatever address it was written
+   * This is what lets the forms save to the database from the published
+   * address without a rebuild. Once the backend is online, the published site
+   * finds it by asking, instead of pointing at whatever address it was written
    * against. Adding a host to this list is the only change ever needed when
    * the backend moves.
    */
@@ -134,17 +129,15 @@ function resolveBackend() {
 
         // Same origin needs no base at all, which keeps cookies first-party.
         BACKEND.apiBase = base;
-        BACKEND.adminUrl = base
-          ? base + '/admin.html'
-          : new URL('admin.html', location.href).href;
         return BACKEND;
       } catch {
         // This candidate is not answering; try the next one.
       }
     }
 
-    // Nothing answered. Keep the local fallback so a developer who is running
-    // the server by hand still has somewhere sensible to be sent.
+    // Nothing answered. Leave apiBase blank so the forms keep addressing this
+    // same origin and report plainly that the server cannot be reached, rather
+    // than silently aiming at somewhere that does not exist.
     return BACKEND;
   })();
 
@@ -157,28 +150,6 @@ const api = (path) => BACKEND.apiBase + '/api' + path;
 /** The backend is considered up once the page is served by it. */
 const backendOn = () => true;
 
-/**
- * Is the API actually answering?
- *
- * Checked once and remembered. A static host such as GitHub Pages serves the
- * page fine but has no /api at all, and that is the one situation where the
- * admin panel genuinely cannot work on this page.
- */
-let apiCheck = null;
-async function apiAvailable() {
-  // Let the discovery finish first, otherwise this would test whichever
-  // candidate happened to be configured and miss a backend that is up.
-  await resolveBackend();
-
-  if (apiCheck === null) {
-    apiCheck = fetch(api('/health'), { cache: 'no-store' })
-      .then((r) => r.json())
-      .then((d) => !!(d && d.ok))
-      .catch(() => false);
-  }
-  return apiCheck;
-}
-
 /* ---------------------------------------------------------
    CATALOG
    price: number  -> fixed price, added to the cart total
@@ -188,7 +159,7 @@ let SERVICES = [
   {
     id: 'printer-repair',
     title: 'Printer Repair',
-    icon: '🖨️',
+    icon: 'ðŸ–¨ï¸',
     price: 300,
     bento: 'lead',            // 2 x 2 in the bento grid
     badge: 'Most booked',
@@ -198,21 +169,21 @@ let SERVICES = [
   {
     id: 'computer-repair',
     title: 'Computer Repair',
-    icon: '💻',
+    icon: 'ðŸ’»',
     price: 500,
     desc: 'No power, no display, frequent hangs, viruses and slow performance. Desktop or laptop.'
   },
   {
     id: 'cartridge-refill',
     title: 'Cartridge Refill',
-    icon: '🖋️',
+    icon: 'ðŸ–‹ï¸',
     price: 250,
     desc: 'Genuine-toner refill with print-head cleaning, restoring sharp original print quality.'
   },
   {
     id: 'quick-service',
     title: 'Quick Service',
-    icon: '⚡',
+    icon: 'âš¡',
     price: 250,
     bento: 'wide',            // full width, short
     desc: 'Express check-up and minor fixes while you wait, or a priority on-site visit slot.'
@@ -223,7 +194,7 @@ let AMC_PLANS = [
   {
     id: 'amc-computer',
     title: 'Computer AMC',
-    icon: '💻',
+    icon: 'ðŸ’»',
     price: 2500,
     period: 'per year',
     sub: 'Annual Maintenance Contract for desktops & laptops',
@@ -240,7 +211,7 @@ let AMC_PLANS = [
   {
     id: 'amc-printer',
     title: 'Printer AMC',
-    icon: '🖨️',
+    icon: 'ðŸ–¨ï¸',
     price: 1500,
     period: 'per year',
     sub: 'Annual Maintenance Contract for printers & MFPs',
@@ -260,28 +231,28 @@ let BUY_SELL = [
   {
     id: 'buy-desktop',
     title: 'Refurbished Desktops',
-    icon: '🖥️',
+    icon: 'ðŸ–¥ï¸',
     price: null,
     desc: 'Tested, graded and ready-to-use office and gaming desktops. Bulk supply available.'
   },
   {
     id: 'buy-printer',
     title: 'Printers & MFPs',
-    icon: '🖨️',
+    icon: 'ðŸ–¨ï¸',
     price: null,
     desc: 'New and refurbished inkjet, laser and multifunction printers from all major brands.'
   },
   {
     id: 'buy-laptop',
     title: 'Laptops',
-    icon: '💼',
+    icon: 'ðŸ’¼',
     price: null,
     desc: 'Business and student laptops, new and certified refurbished. We also buy yours.'
   },
   {
     id: 'buy-consumables',
     title: 'Consumables & Parts',
-    icon: '📦',
+    icon: 'ðŸ“¦',
     price: null,
     desc: 'Toner, ink, cartridges, ribbons, drums and spare parts for all major brands.'
   }
@@ -684,7 +655,7 @@ function renderCart() {
     }
   }
 
-  /* UPI panel — the customer pays the GST-inclusive amount */
+  /* UPI panel â€” the customer pays the GST-inclusive amount */
   const method = $('input[name="payMethod"]:checked')?.value || 'Cash';
   $('#cartUpi').hidden = method !== 'UPI';
   $('#cartPayLink').href = upiLink(grand);
@@ -692,7 +663,7 @@ function renderCart() {
 
   /* checkout button label */
   $('#cartCheckout').textContent = hasItems
-    ? `Send order on WhatsApp · ${money(grand)}`
+    ? `Send order on WhatsApp Â· ${money(grand)}`
     : 'Send order on WhatsApp';
 
   /* Any change to the cart invalidates the last receipt: the reference shown
@@ -831,7 +802,7 @@ function dayLabel(value) {
 }
 
 function reviewCard(r) {
-  const stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
+  const stars = 'â˜…'.repeat(r.rating) + 'â˜†'.repeat(5 - r.rating);
   const meta = [esc(r.service), esc(dayLabel(r.date))].filter(Boolean).join(' &middot; ');
   return `
     <figure class="quote">
@@ -935,7 +906,7 @@ async function submitReview(event) {
     btn.disabled = false;
     reviewFeedback(
       false,
-      'Reviews cannot be posted on the website yet. Please send it on WhatsApp instead — we will add it for you.'
+      'Reviews cannot be posted on the website yet. Please send it on WhatsApp instead â€” we will add it for you.'
     );
     $('#rvWhatsApp')?.removeAttribute('hidden');
     return;
@@ -967,7 +938,7 @@ async function submitReview(event) {
     // what they wrote.
     reviewFeedback(
       false,
-      'We could not post that just now. Please send it on WhatsApp instead — we will add it for you.'
+      'We could not post that just now. Please send it on WhatsApp instead â€” we will add it for you.'
     );
     const wa = $('#rvWhatsApp');
     if (wa) {
@@ -1130,7 +1101,7 @@ function checkout() {
   if (checkingOut) return;
 
   if (cart.length === 0) {
-    toast('Your cart is empty — add a service first');
+    toast('Your cart is empty â€” add a service first');
     return;
   }
 
@@ -1158,7 +1129,7 @@ function checkout() {
     checkingOut = false;
     btn.disabled = false;
     window.open(waLink(buildOrderMessage(customer, newOrderRef())), '_blank', 'noopener');
-    toast('Opening WhatsApp with your order…');
+    toast('Opening WhatsApp with your orderâ€¦');
     return;
   }
 
@@ -1172,7 +1143,7 @@ function checkout() {
   // and the receipt warns them we do not have the order yet.
   const record = buildOrderRecord(customer, newOrderRef(), method);
 
-  btn.textContent = 'Saving your order…';
+  btn.textContent = 'Saving your orderâ€¦';
 
   saveOrder(record)
     .catch(() => null)
@@ -1195,7 +1166,7 @@ function finishCheckout(customer, method, localRef, saved) {
   const message = buildOrderMessage(customer, ref);
 
   window.open(waLink(message), '_blank', 'noopener');
-  toast(saved ? 'Order saved — opening WhatsApp…' : 'Opening WhatsApp with your order…');
+  toast(saved ? 'Order saved â€” opening WhatsAppâ€¦' : 'Opening WhatsApp with your orderâ€¦');
 
   showOrderReceipt(saved ? ref : null);
 }
@@ -1285,7 +1256,7 @@ function toast(msg) {
 }
 
 /* ---------------------------------------------------------
-   JOURNEY — language switch
+   JOURNEY â€” language switch
    --------------------------------------------------------- */
 const LANG_KEY = 'trishool_lang_v1';
 
@@ -1512,29 +1483,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  /* --- admin: open the dashboard panel from either link --- */
-  $('#navAdmin')?.addEventListener('click', (e) => {
-    e.preventDefault();
-    openAdmin();
-  });
-  $('.foot-admin')?.addEventListener('click', (e) => {
-    e.preventDefault();
-    openAdmin();
-  });
-
-  /* --- the "not running" notice --- */
-  $('#adminNoticeClose')?.addEventListener('click', closeAdminNotice);
-  $('#adminNoticeBackdrop')?.addEventListener('click', closeAdminNotice);
-  $('#adminNoticeOpen')?.addEventListener('click', () => {
-    closeAdminNotice();
-    location.href = BACKEND.adminUrl || `${SERVER_URL}/admin.html`;
-  });
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && !$('#adminNotice')?.hidden) closeAdminNotice();
-  });
-
-  showAdminNav();
-
   /* --- keyboard: Escape closes drawer --- */
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && $('#cartDrawer').classList.contains('open')) closeCart();
@@ -1602,176 +1550,6 @@ function initReviewLink() {
 }
 
 /* ---------------------------------------------------------
-   ADMIN LINK IN THE NAVIGATION
-   ---------------------------------------------------------
-   A signed-in admin gets an "Admin" link in the navigation bar so the
-   dashboard is one click away from the site they manage.
-
-   The link is hidden in the markup and only revealed once the API confirms a
-   valid admin session, so an ordinary customer never sees it. This is a
-   convenience only and grants nothing: the link points at admin.html, which
-   still checks the session, and every /api/admin endpoint is still guarded by
-   requireAdmin on the server. Hiding a link is not access control - the server
-   is. Showing it only to an admin simply keeps the staff page out of the way of
-   visitors.
-   --------------------------------------------------------- */
-/**
- * The Admin link is always visible - it only opens the sign-in form, so there
- * is nothing to hide and no reason to hide it. What this does is confirm
- * whether somebody is already signed in, so the link can say so.
- */
-async function showAdminNav() {
-  const link = $('#navAdmin');
-  if (!link) return;
-
-  try {
-    const res = await fetch(api('/auth/status'), { cache: 'no-store' });
-    const data = await res.json();
-    if (data.ok && data.admin) {
-      link.title = `Signed in as ${data.admin.name} - open the admin dashboard`;
-    } else {
-      link.title = 'Staff sign in';
-    }
-  } catch {
-    link.title = 'Staff sign in';
-  }
-}
-
-/**
- * Open the admin dashboard, which lives inside this page as a full-screen
- * panel (#adminPanel).
- *
- * admin.js is fetched on first use rather than on page load. A visitor who
- * never opens the panel never downloads the ~20 KB of dashboard code, and the
- * panel's own data still comes only from the protected /api/admin endpoints,
- * so nothing about an order or a customer is ever in the page until a valid
- * admin session has been confirmed by the server.
- */
-let adminScriptPromise = null;
-
-function loadAdminScript() {
-  if (window.openAdminPanel) return Promise.resolve();
-  if (adminScriptPromise) return adminScriptPromise;
-
-  adminScriptPromise = new Promise((resolve, reject) => {
-    const s = document.createElement('script');
-    s.src = 'admin.js';
-    s.onload = resolve;
-    s.onerror = () => reject(new Error('Could not load the admin dashboard'));
-    document.body.appendChild(s);
-  });
-
-  return adminScriptPromise;
-}
-
-/**
- * Where the real server lives.
- *
- * A page opened straight off disk (file://) is not allowed by the browser to
- * call an API, so the admin dashboard cannot work from there no matter what the
- * JavaScript does. Instead of showing a dead sign-in form, clicking Admin hands
- * the browser over to the server, where sign-in and the dashboard behave
- * normally. Staff never see an error, and customers never see a notice.
- */
-const SERVER_URL = 'http://127.0.0.1:3000';
-
-/** True when this page was opened from disk rather than from the server. */
-const openedAsFile = () => location.protocol === 'file:';
-
-/** Is the machine that hosts the dashboard actually switched on and running? */
-async function adminHostReachable() {
-  const url = BACKEND.adminUrl || `${SERVER_URL}/admin.html`;
-  try {
-    // The page is not needed - only an answer. `no-cors` gives an opaque
-    // response, but reaching it at all proves the server is up.
-    await fetch(url, { mode: 'no-cors', cache: 'no-store' });
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-/**
- * Explain that the dashboard is not reachable, and what to do about it.
- *
- * This used to be a toast. A toast lasts 2.4 seconds here, so on anything but
- * an instant connection the message was gone before it had been read and the
- * Admin button simply looked broken - which is the behaviour that kept coming
- * back. The panel stays until it is dismissed or dealt with.
- *
- * "Open the dashboard" always navigates, without re-testing. The reachability
- * probe can be wrong in both directions - the browser may block the request
- * while the server is perfectly up - so the user is never trapped behind a
- * check they have no way to override.
- */
-function adminOfflineNotice() {
-  const url = BACKEND.adminUrl || `${SERVER_URL}/admin.html`;
-  console.warn(`[admin] ${url} is not reachable. Start the server (START-WEBSITE.bat) and try again.`);
-
-  const panel = $('#adminNotice');
-  const backdrop = $('#adminNoticeBackdrop');
-  if (!panel) {
-    // No panel on this page: fall back to the short message.
-    toast('The admin dashboard is not running. Start it with START-WEBSITE.bat, then click Admin again.');
-    return;
-  }
-
-  panel.hidden = false;
-  if (backdrop) backdrop.hidden = false;
-  document.body.classList.add('no-scroll');
-  $('#adminNoticeOpen')?.focus();
-}
-
-/** Close the notice and hand the page back to the visitor. */
-function closeAdminNotice() {
-  $('#adminNotice')?.setAttribute('hidden', '');
-  $('#adminNoticeBackdrop')?.setAttribute('hidden', '');
-  document.body.classList.remove('no-scroll');
-
-  // Return focus somewhere real. The nav link is inside a collapsed menu at
-  // narrow widths, and focusing a hidden element silently does nothing, which
-  // would strand the keyboard user on a button that no longer exists.
-  const link = $('#navAdmin');
-  const visible = link && link.offsetParent !== null;
-  if (visible) {
-    link.focus();
-  } else {
-    $('#adminNoticeOpen')?.blur();
-  }
-}
-
-async function openAdmin() {
-  // Opened from disk, or served from a static host with no API behind it.
-  // Either way there is nothing for the in-page panel to talk to, so the
-  // browser goes to where the dashboard actually runs instead of showing a
-  // sign-in form that can never succeed.
-  if (openedAsFile() || !(await apiAvailable())) {
-    // Only navigate if that host is up. Sending the browser to a machine that
-    // is off just produces a dead end with no explanation.
-    if (await adminHostReachable()) {
-      location.href = BACKEND.adminUrl || `${SERVER_URL}/admin.html`;
-    } else {
-      adminOfflineNotice();
-    }
-    return;
-  }
-
-  const panel = $('#adminPanel');
-  if (!panel) {
-    // No panel on this page (admin.html) - go there instead.
-    location.href = 'admin.html';
-    return;
-  }
-
-  try {
-    await loadAdminScript();
-    window.openAdminPanel?.();
-  } catch {
-    toast('Could not open the admin dashboard. Please refresh and try again.');
-  }
-}
-
-/* ---------------------------------------------------------
    BOOKING & INQUIRY FORMS
    Both save to MySQL through the API and hand back a reference plus a
    ready-made WhatsApp message, so nothing is lost if the visitor prefers
@@ -1800,7 +1578,7 @@ function fillServiceSelect(select, { includeBlank, blankLabel } = {}) {
   let html = includeBlank ? `<option value="">${blankLabel}</option>` : '';
   html += priced
     .map((s) => `<option value="${esc(s.id)}">${esc(s.title)}${
-      s.price === null ? '' : ` — ${money(s.price)}`}</option>`)
+      s.price === null ? '' : ` â€” ${money(s.price)}`}</option>`)
     .join('');
   html += '<option value="product">Buying or selling equipment</option>';
   select.innerHTML = html;
@@ -2044,7 +1822,7 @@ function initPwa() {
       bar.remove();
       deferred.prompt();
       const choice = await deferred.userChoice;
-      if (choice.outcome === 'accepted') toast('Installing the app…');
+      if (choice.outcome === 'accepted') toast('Installing the appâ€¦');
       deferred = null;
     });
 

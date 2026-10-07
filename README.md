@@ -45,16 +45,19 @@ that reads and writes that database.
 
 ### For the business (the admin dashboard)
 
-The dashboard is built **into the website page itself**, as a full-screen panel.
-Clicking **Admin** — in the navigation bar, or the quiet link in the footer —
-opens it over the site. Sign in with an email address and password; the panel
-then shows the dashboard until you close it.
+The public website has **no admin link at all** — not in the navigation, not in
+the footer. Customers see a normal company website and nothing else.
 
-Nothing about an order or a customer is sent to a visitor's browser. The panel
-starts as an empty shell, `admin.js` is only downloaded once an admin opens it,
-and every figure comes from `/api/admin/*`, which the server rejects without a
-valid session cookie. A customer who never opens the panel downloads none of
-it.
+The dashboard is a **separate page with its own entrance**. Go to the
+`trishool-website` folder and double-click:
+
+```
+ADMIN-ONLY.bat
+```
+
+That starts the database and the server if they are not already running, then
+opens `admin.html`. Sign in with an email address and password and the
+dashboard opens. Leave the black window open — closing it stops the server.
 
 The dashboard shows:
 

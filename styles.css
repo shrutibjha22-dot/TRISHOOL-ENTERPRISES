@@ -671,7 +671,7 @@ html.js .tl-item[data-reveal]:nth-child(5){ transition-delay:.32s; }
 
 /* ---------- legacy stats ---------- */
 .legacy-stats{
-  display:grid; grid-template-columns:repeat(4,1fr); gap:20px;
+  display:grid; grid-template-columns:repeat(3,1fr); gap:20px;
   background:var(--navy); border-radius:var(--radius);
   padding:34px 28px; margin-bottom:48px; text-align:center;
 }

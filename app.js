@@ -388,6 +388,9 @@ function renderServices() {
         <button class="btn ${s.bento === 'lead' ? 'btn-primary' : 'btn-outline'} btn-block" data-add="${esc(s.id)}">
           ${s.bento === 'lead' ? 'Add to cart' : 'Add'}
         </button>
+        <button class="btn-book" type="button" data-book="${esc(s.id)}">
+          Book this service
+        </button>
       </article>
     `;
   }).join('');
@@ -423,6 +426,9 @@ function renderAmc() {
         <button class="btn ${a.price <= 1500 ? 'btn-outline' : 'btn-primary'} btn-block" data-add="${esc(a.id)}">
           Add AMC to cart
         </button>
+        <button class="btn-book" type="button" data-book="${esc(a.id)}">
+          Book this service
+        </button>
       </article>
     `;
   }).join('');
@@ -438,6 +444,9 @@ function renderBuySell() {
         <span class="price">${priceLabel(b)}${gstCaption(b)}</span>
       </div>
       <button class="btn btn-outline btn-block" data-add="${esc(b.id)}">Add enquiry to cart</button>
+      <button class="btn-book" type="button" data-book="${esc(b.id)}">
+        Book this service
+      </button>
     </article>
   `).join('');
 }
@@ -1432,6 +1441,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // add to cart
   document.addEventListener('click', (e) => {
+    const book = e.target.closest('[data-book], [data-book-top]');
+    if (book) {
+      e.preventDefault();
+      gotoBooking(book.dataset.book || null);
+      return;
+    }
+
     const add = e.target.closest('[data-add]');
     if (add) { addToCart(add.dataset.add); return; }
 
@@ -1553,6 +1569,38 @@ function initReviewLink() {
   update();
 }
 
+/**
+ * Take the customer straight to the booking form, with the service they were
+ * looking at already filled in.
+ *
+ * Choosing a service and then hunting down a separate booking form is where a
+ * lot of enquiries get lost, so every service card carries its own Book button
+ * and the strip at the top of the page carries one that leaves the field
+ * blank for a general enquiry.
+ */
+function gotoBooking(serviceId) {
+  // The form has two tabs; make sure the booking one is the visible one.
+  const tab = $('#tabBooking');
+  if (tab) tab.click();
+
+  const select = $('#bkService');
+  if (select && serviceId) {
+    // The option list is built after the services load, so only set it when
+    // the value is genuinely there. Falling back to the blank option is
+    // better than leaving a stale selection behind.
+    const wanted = String(serviceId);
+    select.value = [...select.options].some((o) => o.value === wanted) ? wanted : '';
+  }
+
+  const section = $('#inquire');
+  if (!section) return;
+
+  // Focus the first field so the customer can type straight away, but only
+  // after the scroll has settled or the browser fights the scroll.
+  section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  setTimeout(() => $('#bkName')?.focus({ preventScroll: true }), 450);
+}
+
 /* ---------------------------------------------------------
    BOOKING & INQUIRY FORMS
    Both save to MySQL through the API and hand back a reference plus a
@@ -1577,7 +1625,12 @@ function formFeedback(errId, okId, state, message) {
 /** Populate a <select> from the live catalog. */
 function fillServiceSelect(select, { includeBlank, blankLabel } = {}) {
   if (!select) return;
-  const priced = [...SERVICES, ...AMC_PLANS];
+
+  // Everything the site sells can be booked, so all three lists belong here.
+  // Buy and sell items were missing, which quietly broke the "Book this
+  // service" button on those cards: it had nothing in the dropdown to
+  // preselect, so the customer arrived at a blank form.
+  const priced = [...SERVICES, ...AMC_PLANS, ...BUY_SELL];
 
   let html = includeBlank ? `<option value="">${blankLabel}</option>` : '';
   html += priced

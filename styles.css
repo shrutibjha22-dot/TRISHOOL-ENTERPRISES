@@ -904,6 +904,56 @@ html.js .tl-item[data-reveal]:nth-child(5){ transition-delay:.32s; }
 }
 .cart-receipt-warn strong{ display:block; margin-bottom:3px; }
 
+/* ---------- top strip: trust ticker plus a booking shortcut ----------
+   Sits above the hero so the page opens on evidence of work done since
+   1997, with the booking action beside it rather than buried further
+   down. The ticker keeps its own styling; this only lays the row out. */
+.top-strip{
+  position:relative; z-index:5;
+  display:flex; align-items:stretch; gap:0;
+  background:var(--navy);
+  border-bottom:1px solid rgba(255,255,255,.10);
+}
+.top-strip .ticker{ flex:1 1 auto; min-width:0; }
+
+.top-strip-book{
+  flex:none;
+  display:inline-flex; align-items:center; gap:8px;
+  padding:0 22px;
+  background:var(--emerald-btn); color:#fff;
+  font-size:.82rem; font-weight:700; letter-spacing:.2px;
+  text-decoration:none; white-space:nowrap;
+  border-left:1px solid rgba(255,255,255,.14);
+  transition:background .15s;
+}
+.top-strip-book:hover{ background:var(--emerald-btn-hover); }
+.top-strip-book .ico{ width:16px; height:16px; fill:currentColor; flex:none; }
+
+/* On narrow screens the ticker keeps the space it needs and the button
+   wraps under it rather than squeezing the text into nothing. */
+@media (max-width:760px){
+  .top-strip{ flex-wrap:wrap; }
+  .top-strip .ticker{ flex:1 0 100%; }
+  .top-strip-book{
+    flex:1 0 100%; justify-content:center;
+    padding:11px 16px; border-left:0; border-top:1px solid rgba(255,255,255,.14);
+  }
+}
+
+/* ---------- "Book this service" on a service card ----------
+   Deliberately quieter than the Add button above it: booking is an
+   alternative to buying, not the main call to action. */
+.btn-book{
+  display:block; width:100%; margin-top:10px;
+  font-family:inherit; font-size:.8rem; font-weight:700;
+  color:var(--emerald-btn); background:transparent;
+  border:1px dashed var(--emerald); border-radius:999px;
+  padding:8px 12px; cursor:pointer;
+  transition:background .15s,color .15s,border-color .15s;
+}
+.btn-book:hover{ background:var(--emerald-light); border-style:solid; }
+.btn-book:focus-visible{ outline:2px solid var(--emerald); outline-offset:2px; }
+
 /* ============================ ADDRESS ============================ */
 .addr{
   font-style:normal; font-family:var(--serif-body);

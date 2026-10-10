@@ -71,6 +71,35 @@
 
 <main class="site-main">
 
+<!-- ============================ TOP STRIP ============================
+     Sits above the hero so the very first thing on the page is the
+     running list of what the shop has actually done since 1997, with a
+     booking shortcut beside it. Trust first, offer second.
+     The ticker itself is decorative, so it keeps aria-hidden; the book
+     button is a real control and is deliberately outside that. -->
+<div class="top-strip">
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-track">
+      <div class="ticker-group">
+        <span>Since 1997</span><b></b><span>Dot Matrix Repair</span><b></b>
+        <span>Laser Toners</span><b></b><span>Ink Tank Printers</span><b></b>
+        <span>Printer Head Refurbishing</span><b></b><span>Computer AMC</span><b></b>
+        <span>Printer AMC</span><b></b><span>Same-Day Service</span><b></b>
+      </div>
+      <div class="ticker-group">
+        <span>Since 1997</span><b></b><span>Dot Matrix Repair</span><b></b>
+        <span>Laser Toners</span><b></b><span>Ink Tank Printers</span><b></b>
+        <span>Printer Head Refurbishing</span><b></b><span>Computer AMC</span><b></b>
+        <span>Printer AMC</span><b></b><span>Same-Day Service</span><b></b>
+      </div>
+    </div>
+  </div>
+  <a class="top-strip-book" href="#inquire" data-book-top>
+    <svg viewBox="0 0 24 24" class="ico" aria-hidden="true"><path d="M7 2v2H5.5A2.5 2.5 0 0 0 3 6.5v13A2.5 2.5 0 0 0 5.5 22h13a2.5 2.5 0 0 0 2.5-2.5v-13A2.5 2.5 0 0 0 18.5 4H17V2h-2v2H9V2H7Zm12 8v9H5v-9h14Z"/></svg>
+    Book a Service
+  </a>
+</div>
+
 <!-- ============================ HERO ============================ -->
 <section class="hero" id="home">
   <div class="hero-bg" aria-hidden="true"></div>
@@ -125,24 +154,6 @@
 
   </div>
 </section>
-
-<!-- ============================ TICKER ============================ -->
-<div class="ticker" aria-hidden="true">
-  <div class="ticker-track">
-    <div class="ticker-group">
-      <span>Since 1997</span><b></b><span>Dot Matrix Repair</span><b></b>
-      <span>Laser Toners</span><b></b><span>Ink Tank Printers</span><b></b>
-      <span>Printer Head Refurbishing</span><b></b><span>Computer AMC</span><b></b>
-      <span>Printer AMC</span><b></b><span>Same-Day Service</span><b></b>
-    </div>
-    <div class="ticker-group">
-      <span>Since 1997</span><b></b><span>Dot Matrix Repair</span><b></b>
-      <span>Laser Toners</span><b></b><span>Ink Tank Printers</span><b></b>
-      <span>Printer Head Refurbishing</span><b></b><span>Computer AMC</span><b></b>
-      <span>Printer AMC</span><b></b><span>Same-Day Service</span><b></b>
-    </div>
-  </div>
-</div>
 
 <!-- ============================ TRUST STATS ============================ -->
 <section class="trust-strip">
